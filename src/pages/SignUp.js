@@ -31,17 +31,20 @@ function SignUp() {
     return errors;
   };
 
-  const handleSubmit = (values) => {
- /* axios.post('API_URL', values)
-    .then(response => {
-      // handle success
-      setSent(true);
-    })
-    .catch(error => {
-      // handle error
-     });*/
+  const handleSubmit = async (values) => {
+    try {
+    const response = await axios.post('API_URL', values);
+    if (response.status === 200) {
+    // handle success
     setSent(true);
-};
+    } else {
+    // handle error
+    }
+    } catch (error) {
+    console.error(error);
+    // handle error
+    }
+    };
 
   return (
     <React.Fragment>
