@@ -11,6 +11,7 @@ import RFTextField from './modules/form/RFTextField';
 import FormButton from './modules/form/FormButton';
 import FormFeedback from './modules/form/FormFeedback';
 import withRoot from './modules/withRoot';
+import axios from 'axios';
 
 function SignIn() {
   const [sent, setSent] = React.useState(false);
@@ -28,9 +29,17 @@ function SignIn() {
     return errors;
   };
 
-  const handleSubmit = () => {
-    setSent(true);
+  const handleSubmit = async (values) => {
+    try {
+      const response = await axios.post('/api/login', values);
+      if (response.status === 200) {
+        setSent(true);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
+  
 
   return (
     <React.Fragment>
@@ -43,7 +52,7 @@ function SignIn() {
           <Typography variant="body2" align="center">
             {'Not a member yet? '}
             <Link
-              href="src/pages/SignIn.js"
+              href="/signup"
               align="center"
               underline="always"
             >
