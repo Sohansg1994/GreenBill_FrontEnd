@@ -8,23 +8,17 @@ const rawTheme = createTheme({
       main: '#28282a',
       dark: '#1e1e1f',
 
-      /*light: '#337066',
-      main: '#004d40',
-      dark: '#00352c',
-
-       light: '#a9c25d',
-      main: '#416a59',
-      dark: '#73a24e',*/
+   
       
     },
     secondary: {
-      light: '#fff5f8',
+      /*light: '#fff5f8',
       main: '#ff3366',
-      dark: '#e62958',
+      dark: '#e62958',*/
 
-      /*light: ' #4DB6AC',
-      main: '#26A69A',
-      dark: '#009688',*/
+      light: '#f1f8e9',
+      main: '#4caf50',
+      dark: '#1b5e20',
     
      
     },
