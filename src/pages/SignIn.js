@@ -31,9 +31,12 @@ function SignIn() {
 
   const handleSubmit = async (values) => {
     try {
-      const response = await axios.post('/api/login', values);
+      const response = await axios.post('http://localhost:3200/api/login', values);
+      console.log(response);
       if (response.status === 200) {
+        
         setSent(true);
+        console.log(response);
       }
     } catch (error) {
       console.error(error);
@@ -52,7 +55,7 @@ function SignIn() {
           <Typography variant="body2" align="center">
             {'Not a member yet? '}
             <Link
-              href="/subcription"
+              href="/signup"
               align="center"
               underline="always"
             >
@@ -113,9 +116,9 @@ function SignIn() {
           )}
         </Form>
         <Typography align="center">
-          <Link underline="always" href="/premium-themes/onepirate/forgot-password/">
+         { /*<Link underline="always" href="/premium-themes/onepirate/forgot-password/">
             Forgot password?
-          </Link>
+              </Link>*/}
         </Typography>
       </AppForm>
       <AppFooter />

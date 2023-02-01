@@ -12,11 +12,14 @@ import RFTextField from './modules/form/RFTextField';
 import FormButton from './modules/form/FormButton';
 import FormFeedback from './modules/form/FormFeedback';
 import withRoot from './modules/withRoot';
+import { useNavigate } from "react-router-dom";
 
 import axios from 'axios';
 
 function SignUp() {
   const [sent, setSent] = React.useState(false);
+  let navigate = useNavigate();
+ 
 
   const validate = (values) => {
     const errors = required(['firstName', 'lastName', 'email', 'password'], values);
@@ -25,7 +28,7 @@ function SignUp() {
       const emailError = email(values.email);
       if (emailError) {
         errors.email = emailError;
-        console.log('email error')
+        
       }
     }
 
@@ -34,10 +37,13 @@ function SignUp() {
 
   const handleSubmit = async (values) => {
     try {
-    const response = await axios.post('API_URL', values);
-    if (response.status === 200) {
-    // handle success
-    setSent(true);
+    const response = await axios.post('http://localhost:3200/api/register', values);
+    console.log(response);
+    console.log(response.data.result);
+    if (response.status === 201) {
+      setSent(true);
+      navigate("/subcription");
+     
     } else {
     // handle error
     }
@@ -129,6 +135,7 @@ function SignUp() {
                 sx={{ mt: 3, mb: 2 }}
                 disabled={submitting || sent}
                 color="secondary"
+                //href="/subcription"
                 fullWidth
               >
                 {submitting || sent ? 'In progress…' : 'Sign Up'}

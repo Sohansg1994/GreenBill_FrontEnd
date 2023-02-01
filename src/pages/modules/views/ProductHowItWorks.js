@@ -62,12 +62,13 @@ function ProductHowItWorks() {
                 <Box sx={number}>1.</Box>
                 <Box
                   component="img"
-                  src="/static/themes/onepirate/productHowItWorks1.svg"
-                  alt="suitcase"
+                  //src="/static/themes/onepirate/productHowItWorks1.svg"
+                  //alt="suitcase"
                   sx={image}
                 />
                 <Typography variant="h5" align="center">
-                  Appointment every Wednesday 9am.
+                  Sed ut perspiciatis unde omnis iste natus 
+                  error sit voluptatem 
                 </Typography>
               </Box>
             </Grid>
@@ -76,13 +77,13 @@ function ProductHowItWorks() {
                 <Box sx={number}>2.</Box>
                 <Box
                   component="img"
-                  src="/static/themes/onepirate/productHowItWorks2.svg"
-                  alt="graph"
+                 // src="/static/themes/onepirate/productHowItWorks2.svg"
+                  //alt="graph"
                   sx={image}
                 />
                 <Typography variant="h5" align="center">
-                  First come, first served. Our offers are in limited quantities, so
-                  be quick.
+                Li Europan lingues es membres del sam familie. 
+                Lor separat existentie es un myth. Por 
                 </Typography>
               </Box>
             </Grid>
@@ -91,13 +92,13 @@ function ProductHowItWorks() {
                 <Box sx={number}>3.</Box>
                 <Box
                   component="img"
-                  src="/static/themes/onepirate/productHowItWorks3.svg"
-                  alt="clock"
+                  //src="/static/themes/onepirate/productHowItWorks3.svg"
+                  //alt="clock"
                   sx={image}
                 />
                 <Typography variant="h5" align="center">
-                  {'New offers every week. New experiences, new surprises. '}
-                  {'Your Sundays will no longer be alike.'}
+                  {'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque  '}
+                 
                 </Typography>
               </Box>
             </Grid>

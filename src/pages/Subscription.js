@@ -29,6 +29,7 @@ import Toolbar from '@mui/material/Toolbar';
 
 import GlobalStyles from '@mui/material/GlobalStyles';
 import Container from '@mui/material/Container';
+import { DisabledByDefault } from '@mui/icons-material';
 
 function Subcription() {
   const [sent, setSent] = React.useState(false);
@@ -67,38 +68,49 @@ function Subcription() {
         title: 'Free',
         price: '0',
         description: [
-          '10 users included',
-          '2 GB of storage',
-          'Help center access',
-          'Email support',
+          'Sentence 1',
+          'Sentence 2',
+          'Sentence 4',
+          'Sentence 5',
+        
         ],
-        buttonText: 'Sign up for free',
+        buttonText: 'Get started',
         buttonVariant: 'outlined',
+     
+        path:'/calculations'
+     
       },
       {
         title: 'Pro',
         subheader: 'Most popular',
         price: '15',
         description: [
-          '20 users included',
-          '10 GB of storage',
-          'Help center access',
-          'Priority email support',
+          'Sentence 1',
+          'Sentence 2',
+          'Sentence 4',
+          'Sentence 5',
+         
         ],
         buttonText: 'Get started',
-        buttonVariant: 'contained',
+       // buttonVariant: 'contained',
+       buttonVariant: 'disabled',
+      
+        path:'/subcription'
       },
       {
         title: 'Enterprise',
         price: '30',
         description: [
-          '50 users included',
-          '30 GB of storage',
-          'Help center access',
-          'Phone & email support',
+          'Sentence 1',
+          'Sentence 2',
+          'Sentence 4',
+          'Sentence 5',
         ],
-        buttonText: 'Contact us',
-        buttonVariant: 'outlined',
+        buttonText: 'Get started',
+        //buttonVariant: 'outlined',
+        buttonVariant: 'disabled',
+     
+        path:'/subcription'
       },
     ];
     
@@ -167,8 +179,8 @@ function Subcription() {
                   </ul>
                 </CardContent>
                 <CardActions>
-                  <Button fullWidth variant={tier.buttonVariant}>
-                    {tier.buttonText}
+                  <Button fullWidth variant={tier.buttonVariant} varient={tier.buttonStatus} href={tier.path}>
+                    {tier.buttonText} 
                   </Button>
                 </CardActions>
               </Card>
