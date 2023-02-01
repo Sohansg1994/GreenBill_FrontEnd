@@ -59,18 +59,18 @@ export default function AppFooter() {
               sx={{ height: 120 }}
             >
               <Grid item sx={{ display: 'flex' }}>
-                <Box component="a" href="https://mui.com/" sx={iconStyle}>
+                {/*<Box component="a" href="https://mui.com/" sx={iconStyle}>
                   <img
                    // src="/static/themes/onepirate/appFooterFacebook.png"
                    // alt="Facebook"
                   />
-                </Box>
-                <Box component="a" href="https://twitter.com/MUI_hq" sx={iconStyle}>
+  </Box>*/}
+                {/*<Box component="a" href="https://twitter.com/MUI_hq" sx={iconStyle}>
                   <img
                    // src="/static/themes/onepirate/appFooterTwitter.png"
                     //alt="Twitter"
                   />
-                </Box>
+</Box>*/}
               </Grid>
               <Grid item>
                 <Copyright />
@@ -111,7 +111,7 @@ export default function AppFooter() {
             </TextField>
           </Grid>
           <Grid item>
-            <Typography variant="caption">
+            {/*<Typography variant="caption">
               {'Icons made by '}
               <Link href="https://www.freepik.com" rel="sponsored" title="Freepik">
                 Freepik
@@ -129,7 +129,7 @@ export default function AppFooter() {
               >
                 CC 3.0 BY
               </Link>
-            </Typography>
+              </Typography>*/}
           </Grid>
         </Grid>
       </Container>

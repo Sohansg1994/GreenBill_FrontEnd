@@ -135,7 +135,7 @@ function SignUp() {
                 sx={{ mt: 3, mb: 2 }}
                 disabled={submitting || sent}
                 color="secondary"
-                //href="/subcription"
+                href="/subcription"
                 fullWidth
               >
                 {submitting || sent ? 'In progress…' : 'Sign Up'}
