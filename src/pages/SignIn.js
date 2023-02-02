@@ -13,10 +13,14 @@ import FormFeedback from './modules/form/FormFeedback';
 import withRoot from './modules/withRoot';
 import axios from 'axios';
 import { Stack,Alert } from '@mui/material';
+import { useNavigate } from "react-router-dom";
 
 function SignIn() {
   const [sent, setSent] = React.useState(false);
   const [warning, setWarning] = React.useState(false);
+  const [accessToken, setAccessToken] = React.useState(null);
+  const [refreshToken, setRefreshToken] = React.useState(null);
+  let navigate = useNavigate();
   const validate = (values) => {
     const errors = required(['email', 'password'], values);
 
@@ -35,9 +39,16 @@ function SignIn() {
       const response = await axios.post('http://localhost:3200/api/login', values);
       
       if (response.status === 200) {
-        
+      
+        //const { accessToken, refreshToken } = response.data;
+        const accessToken=response.data.token;
+        const refreshToken=response.data.refreshToken;
+        setAccessToken(accessToken);
+        setRefreshToken(refreshToken);
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
         setSent(true);
-        console.log(response);
+        navigate("/calculations");
       
       }
       else{
