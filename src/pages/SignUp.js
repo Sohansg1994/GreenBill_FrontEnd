@@ -13,11 +13,13 @@ import FormButton from './modules/form/FormButton';
 import FormFeedback from './modules/form/FormFeedback';
 import withRoot from './modules/withRoot';
 import { useNavigate } from "react-router-dom";
+import { Stack,Alert } from '@mui/material';
 
 import axios from 'axios';
 
 function SignUp() {
   const [sent, setSent] = React.useState(false);
+  const [warning, setWarning] = React.useState(false);
   let navigate = useNavigate();
  
 
@@ -38,17 +40,16 @@ function SignUp() {
   const handleSubmit = async (values) => {
     try {
     const response = await axios.post('http://localhost:3200/api/register', values);
-    console.log(response);
+    console.log(response.status);
     console.log(response.data.result);
     if (response.status === 201) {
       setSent(true);
       navigate("/subcription");
      
-    } else {
-    // handle error
-    }
+    } 
     } catch (error) {
-    console.error(error);
+      setWarning(true); 
+    //console.error(error);
     // handle error
     }
     };
@@ -135,11 +136,16 @@ function SignUp() {
                 sx={{ mt: 3, mb: 2 }}
                 disabled={submitting || sent}
                 color="secondary"
-                href="/subcription"
+                //href="/subcription"
                 fullWidth
               >
                 {submitting || sent ? 'In progress…' : 'Sign Up'}
               </FormButton>
+              {warning && (
+                <Stack spacing={2} >
+                  <Alert severity='warning'>Email Already Registerd</Alert>
+                </Stack>
+              )}
             </Box>
           )}
         </Form>

@@ -12,10 +12,11 @@ import FormButton from './modules/form/FormButton';
 import FormFeedback from './modules/form/FormFeedback';
 import withRoot from './modules/withRoot';
 import axios from 'axios';
+import { Stack,Alert } from '@mui/material';
 
 function SignIn() {
   const [sent, setSent] = React.useState(false);
-
+  const [warning, setWarning] = React.useState(false);
   const validate = (values) => {
     const errors = required(['email', 'password'], values);
 
@@ -32,14 +33,19 @@ function SignIn() {
   const handleSubmit = async (values) => {
     try {
       const response = await axios.post('http://localhost:3200/api/login', values);
-      console.log(response);
+      
       if (response.status === 200) {
         
         setSent(true);
         console.log(response);
+      
+      }
+      else{
+        console.log(response.status);
       }
     } catch (error) {
-      console.error(error);
+      //console.error(error);
+      setWarning(true);
     }
   };
   
@@ -112,6 +118,11 @@ function SignIn() {
               >
                 {submitting || sent ? 'In progress…' : 'Sign In'}
               </FormButton>
+              {warning && (
+                <Stack spacing={2} >
+                  <Alert severity='error'>Invalid Email or Password</Alert>
+                </Stack>
+              )}
             </Box>
           )}
         </Form>
