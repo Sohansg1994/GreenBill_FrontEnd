@@ -20,6 +20,8 @@ import axios from 'axios';
 function SignUp() {
   const [sent, setSent] = React.useState(false);
   const [warning, setWarning] = React.useState(false);
+  const [accessToken, setAccessToken] = React.useState(null);
+  const [refreshToken, setRefreshToken] = React.useState(null);   
   let navigate = useNavigate();
  
 
@@ -43,6 +45,19 @@ function SignUp() {
     console.log(response.status);
     console.log(response.data.result);
     if (response.status === 201) {
+
+      //const { accessToken, refreshToken } = response.data;
+      const accessToken=response.data.token;
+      const refreshToken=response.data.refreshToken;
+      //Calculate AccessToken Expiration Time
+      const currentTime = new Date().getTime();
+      const expirationTime = currentTime + 24 * 60 * 60 * 1000;
+      setAccessToken(accessToken);
+      setRefreshToken(refreshToken);
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+      localStorage.setItem("accessTokenExpiration", expirationTime);
+      
       setSent(true);
       navigate("/subcription");
      

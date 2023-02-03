@@ -23,6 +23,7 @@ function SignIn() {
   let navigate = useNavigate();
   const validate = (values) => {
     const errors = required(['email', 'password'], values);
+    
 
     if (!errors.email) {
       const emailError = email(values.email);
@@ -43,10 +44,15 @@ function SignIn() {
         //const { accessToken, refreshToken } = response.data;
         const accessToken=response.data.token;
         const refreshToken=response.data.refreshToken;
+        //Calculate AccessToken Expiration Time
+        const currentTime = new Date().getTime();
+        const expirationTime = currentTime + 24 * 60 * 60 * 1000;
         setAccessToken(accessToken);
         setRefreshToken(refreshToken);
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('refreshToken', refreshToken);
+        localStorage.setItem("accessTokenExpiration", expirationTime);
+       
         setSent(true);
         navigate("/calculations");
       
