@@ -4,7 +4,7 @@ import Link from '@mui/material/Link';
 import AppBar from '../components/AppBar';
 import Toolbar from '../components/Toolbar';
 import { MdPerson } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+
 
 
 const rightLink = {
@@ -19,7 +19,7 @@ function AppAppBar() {
   const expirationTime = localStorage.getItem('accessTokenExpiration');
   const [screenWidth, setScreenWidth] = React.useState(window.innerWidth);
 
-  let navigate = useNavigate();
+
 
   useEffect(() => {
     if (accessToken && expirationTime) {
@@ -40,7 +40,7 @@ function AppAppBar() {
   }, []);
 
   const handleLogout = () => {
-    navigate("/signin");
+    
     localStorage.removeItem('accessToken');
     localStorage.removeItem('expirationTime');                      //handle logout function
     setIsTokenValid(false);
@@ -91,7 +91,7 @@ function AppAppBar() {
                   colour='white'
                  
                   underline="none"
-                  href="/signIn"
+                  href="/projects"
                   sx={{ ...rightLink, fontSize: '0.9rem ','&:hover':{color: 'secondary.light',} }}
                 >
                   <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -105,9 +105,10 @@ function AppAppBar() {
               <Link
                 variant="h6"
                 underline="none"
-                //href="/signin"
+                
                 sx={{ ...rightLink, color: 'secondary.main', marginTop:'0.8rem' }}
                 onClick={handleLogout}
+                href="/signin"
               >
                 {'Log Out'}
               </Link>

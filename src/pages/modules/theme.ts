@@ -1,7 +1,7 @@
 import { createTheme } from '@mui/material/styles';
 import { green, grey, red } from '@mui/material/colors';
 
-const rawTheme = createTheme({
+const mdTheme = createTheme({
   palette: {
     primary: {
       light: '#69696a',
@@ -38,67 +38,67 @@ const rawTheme = createTheme({
 });
 
 const fontHeader = {
-  color: rawTheme.palette.text.primary,
-  fontWeight: rawTheme.typography.fontWeightMedium,
+  color: mdTheme.palette.text.primary,
+  fontWeight: mdTheme.typography.fontWeightMedium,
   fontFamily: "'Roboto Condensed', sans-serif",
   textTransform: 'uppercase',
 };
 
 const theme = {
-  ...rawTheme,
+  ...mdTheme,
   palette: {
-    ...rawTheme.palette,
+    ...mdTheme.palette,
     background: {
-      ...rawTheme.palette.background,
-      default: rawTheme.palette.common.white,
+      ...mdTheme.palette.background,
+      default: mdTheme.palette.common.white,
       placeholder: grey[200],
     },
   },
   typography: {
-    ...rawTheme.typography,
+    ...mdTheme.typography,
     fontHeader,
     h1: {
-      ...rawTheme.typography.h1,
+      ...mdTheme.typography.h1,
       ...fontHeader,
       letterSpacing: 0,
       fontSize: 60,
     },
     h2: {
-      ...rawTheme.typography.h2,
+      ...mdTheme.typography.h2,
       ...fontHeader,
       fontSize: 48,
     },
     h3: {
-      ...rawTheme.typography.h3,
+      ...mdTheme.typography.h3,
       ...fontHeader,
       fontSize: 42,
     },
     h4: {
-      ...rawTheme.typography.h4,
+      ...mdTheme.typography.h4,
       ...fontHeader,
       fontSize: 36,
     },
     h5: {
-      ...rawTheme.typography.h5,
+      ...mdTheme.typography.h5,
       fontSize: 20,
-      fontWeight: rawTheme.typography.fontWeightLight,
+      fontWeight: mdTheme.typography.fontWeightLight,
     },
     h6: {
-      ...rawTheme.typography.h6,
+      ...mdTheme.typography.h6,
       ...fontHeader,
       fontSize: 18,
     },
     subtitle1: {
-      ...rawTheme.typography.subtitle1,
+      ...mdTheme.typography.subtitle1,
       fontSize: 18,
     },
     body1: {
-      ...rawTheme.typography.body2,
-      fontWeight: rawTheme.typography.fontWeightRegular,
+      ...mdTheme.typography.body2,
+      fontWeight: mdTheme.typography.fontWeightRegular,
       fontSize: 16,
     },
     body2: {
-      ...rawTheme.typography.body1,
+      ...mdTheme.typography.body1,
       fontSize: 14,
     },
   },

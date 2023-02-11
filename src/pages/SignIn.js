@@ -54,7 +54,7 @@ function SignIn() {
         localStorage.setItem("accessTokenExpiration", expirationTime);
        
         setSent(true);
-        navigate("/calculations");
+        navigate("/projects");
       
       }
       else{
