@@ -1,5 +1,5 @@
 import { Container } from "@mui/system";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Dashboard from "./components/Dashboard";
 import withRoot from "D:/Proffession/ReactJs/GreenBill_FrontEnd/src/pages/modules/withRoot.js";
 import Paper from "@mui/material/Paper";
@@ -20,6 +20,7 @@ function ProjectDetails() {
 
     const [inputName, setInputName] = useState("");
     const [selectedType, setSelectedType] = useState(0);
+    
     const [selectedApplianceType, setSelectedApplianceType] = useState(0);
     const [wattCapacity, setWattCapacity] = useState("");
     const [elementNumber, setElementNumber] = useState("");
@@ -39,40 +40,53 @@ function ProjectDetails() {
     };
   
     const renderTree = (nodes) => (
-      <TreeItem
-        key={nodes.id}
-        nodeId={nodes.id}
-        label={nodes.name}
-        onClick={(event) => handleNodeSelect(event, nodes.id)}
-      >
-        {Array.isArray(nodes.children)
-          ? nodes.children.map((node) => renderTree(node))
-          : null}
-      </TreeItem>
-    );
-  
-    const handleAdd = () => {
-      setData((prevData) => {
-        let newData = { ...prevData };
-        let node = findNode(newData, selectedNode);
-        if (!node.children) {
-          node.children = [];
-        }
-        let label = inputName;
-        if (selectedType.id === 1) {
-            label = `${inputName} (${selectedType.label})`;
+        <TreeItem
+          key={nodes.id}
+          nodeId={nodes.id}
+          label={
+            nodes.selectedType === 2
+              ? `${nodes.name} - Watt Capacity: ${nodes.wattCapacity} - Element Number: ${nodes.elementNumber}`
+              : nodes.name
           }
-
-        else if (selectedType.id === 2) {
-          label = `${inputName} (${selectedApplianceType.label})`;
-        }
-        node.children.push({ id: inputName, name: label, children: [] });
-        return newData;
-      });
-      setInputName("");
-      setSelectedType(0);
-      setSelectedApplianceType(0);
-    };
+          onClick={(event) => handleNodeSelect(event, nodes.id)}
+        >
+          {Array.isArray(nodes.children)
+            ? nodes.children.map((node) => renderTree(node))
+            : null}
+        </TreeItem>
+      );
+      
+  
+      const handleAdd = () => {
+        setData((prevData) => {
+          let newData = { ...prevData };
+          let node = findNode(newData, selectedNode);
+          if (!node.children) {
+            node.children = [];
+          }
+          let label = inputName;
+          if (selectedType.id === 1) {
+            label = `${inputName} (${selectedType.label})`;
+            node.children.push({ id: inputName, name: label, children: [] });
+          } else if (selectedType.id === 2) {
+            label = `${inputName} (${selectedApplianceType.label})`;
+            node.children.push({
+              id: inputName,
+              name: label,
+              children: [
+                { id: 'wattCapacity', name: `Watt Capacity: ${wattCapacity}` },
+                { id: 'elementNumber', name: `Element Number: ${elementNumber}` },
+              ],
+            });
+          }
+          return newData;
+        });
+        setInputName("");
+        setSelectedType(0);
+        setSelectedApplianceType(0);
+        setWattCapacity("");
+        setElementNumber("");
+      };
   
     const findNode = (data, nodeId) => {
       if (data.id === nodeId) {
@@ -86,6 +100,40 @@ function ProjectDetails() {
       }
       return null;
     };
+
+    useEffect(() => {
+        console.log(selectedType.id);
+      });
+
+      const handleDelete = () => {
+        setData((prevData) => {
+            let newData = {...prevData};
+            let parentNode = findParentNode(newData, selectedNode);
+            if (parentNode) {
+                let nodeIndex = parentNode.children.findIndex((node) => node.id === selectedNode);
+                if (nodeIndex !== -1) {
+                    parentNode.children.splice(nodeIndex, 1);
+                    return newData;
+                }
+            }
+        });
+    };
+    
+    const findParentNode = (data, nodeId) => {
+        if (data.children) {
+            for (let i = 0; i < data.children.length; i++) {
+                if (data.children[i].id === nodeId) {
+                    return data;
+                }
+                let parentNode = findParentNode(data.children[i], nodeId);
+                if (parentNode) {
+                    return parentNode;
+                }
+            }
+        }
+        return null;
+    };
+    
 
   return (
     <React.Fragment>
@@ -121,6 +169,8 @@ function ProjectDetails() {
                                 options={type}
                                 getOptionLabel={(option) => option.label}
                                 style={{ width: '100%', marginTop: 16 }}
+                                id="disable-clearable"
+                                disableClearable
                                 onChange={(event, newValue) => {
                                     setSelectedType(newValue);
                                 }}
@@ -130,16 +180,20 @@ function ProjectDetails() {
                                         label="Type"
                                         variant="outlined"
                                         fullWidth
+          
                                     />
                                 )}
                             />
+                            
+                            
+                          
                             <Divider style={{ marginTop: 16, marginBottom: 16 }} />
 
                             <Autocomplete
                                 options={applianceType}
                                 getOptionLabel={(option) => option.label}
                                 style={{ width: '100%', marginTop: 16 }}
-                                disabled={selectedType.id !== 2 || null}
+                                disabled={selectedType.id !==2}
                                 onChange={(event, newValue) => {
                                     setSelectedApplianceType(newValue);
                                 }}
@@ -160,7 +214,7 @@ function ProjectDetails() {
                                 id="outlined-start-adornment"
                                 fullWidth
                                 value={wattCapacity}
-                                disabled={selectedType.id !== 2 || null}
+                                disabled={selectedType.id !== 2 }
                                 onChange={(e) => setWattCapacity(e.target.value)}
                                 
                                 InputProps={{
@@ -173,15 +227,18 @@ function ProjectDetails() {
                                 variant="outlined"
                                 fullWidth
                                 value={elementNumber}
-                                disabled={selectedType.id !== 2 || null}
+                                disabled={selectedType.id !== 2  }
                                 onChange={(e) => setElementNumber(e.target.value)}
                             />
 
                             </Box>
 
-                            <Box sx={{mt: 3,display: "flex",columnGap: 3,width: "100%"}}>
-                                <Button variant="contained" color="primary" onClick={handleAdd}>
+                            <Box sx={{mt: 3,display: "flex",columnGap: 3,width: "100%" ,justifyContent: 'space-evenly'}}>
+                                <Button variant="contained" color="primary" onClick={handleAdd} sx={{width:'25%'}}>
                                     Add
+                                </Button>
+                                <Button variant="contained" color="error"  onClick={handleDelete} sx={{width:'25%'}}>
+                                    Delete
                                 </Button>
                             </Box>
                            
