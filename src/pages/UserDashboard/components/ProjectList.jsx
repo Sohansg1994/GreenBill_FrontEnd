@@ -1,20 +1,18 @@
-import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-
-
+import * as React from "react";
+import { styled } from "@mui/material/styles";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: '#28282a',
+    backgroundColor: "#28282a",
     color: theme.palette.common.white,
     fontSize: 17,
   },
@@ -24,28 +22,20 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
+  "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
   },
   // hide last border
-  '&:last-child td, &:last-child th': {
+  "&:last-child td, &:last-child th": {
     border: 0,
   },
 }));
 
-function createData(
-  name: string,
-  type: string,
-  last_update_date: string,
-  
-) {
+function createData(name, type, last_update_date) {
   return { name, type, last_update_date };
 }
 
-const rows = [
-  createData('Lake House', 'Domestic','2023/01/23'),
-
-];
+const rows = [createData("Lake House", "Domestic", "2023/01/23")];
 
 export default function CustomizedTables() {
   return (
@@ -57,7 +47,6 @@ export default function CustomizedTables() {
             <StyledTableCell align="center">Type</StyledTableCell>
             <StyledTableCell align="center">Last Update Date</StyledTableCell>
             <StyledTableCell align="center">Actions</StyledTableCell>
-            
           </TableRow>
         </TableHead>
         <TableBody>
@@ -67,14 +56,34 @@ export default function CustomizedTables() {
                 {row.name}
               </StyledTableCell>
               <StyledTableCell align="center">{row.type}</StyledTableCell>
-              <StyledTableCell align="center">{row.last_update_date}</StyledTableCell>
               <StyledTableCell align="center">
-                <Box sx={{  display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <Button variant="contained" color="info" sx={{ mr: 2 }} href={`/projectdetails?projectName=${row.name}`}>View</Button>
+                {row.last_update_date}
+              </StyledTableCell>
+              <StyledTableCell align="center">
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Button
+                    variant="contained"
+                    color="info"
+                    sx={{ mr: 2 }}
+                    href={`/projectdetails?projectName=${row.name}`}
+                  >
+                    View
+                  </Button>
 
-                <Button variant="contained" color="error" href='/projectdetails'>Delete</Button>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    href="/projectdetails"
+                  >
+                    Delete
+                  </Button>
                 </Box>
-                
               </StyledTableCell>
             </StyledTableRow>
           ))}
