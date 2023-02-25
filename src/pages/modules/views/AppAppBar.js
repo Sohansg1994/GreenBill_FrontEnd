@@ -22,10 +22,11 @@ function AppAppBar() {
   useEffect(() => {
     if (accessToken && expirationTime) {
       const currentTime = new Date().getTime(); //expiration time have to calculate or should recieved from backend
+      console.log(currentTime);
       if (currentTime < expirationTime) {
         setIsTokenValid(true);
+        console.log(expirationTime);
       } else {
-        navigate("/signIn");
       }
     }
   }, [accessToken, expirationTime]);

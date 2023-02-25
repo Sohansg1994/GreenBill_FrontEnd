@@ -17,6 +17,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 import AlertTitle from "@mui/material/AlertTitle";
+import { makeStyles } from "@mui/material";
 
 function ProjectDetails() {
   //get project name from Project page

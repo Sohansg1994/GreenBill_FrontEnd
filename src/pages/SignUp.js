@@ -43,12 +43,12 @@ function SignUp() {
   const handleSubmit = async (values) => {
     try {
       const response = await axios.post(
-        "http://localhost:3200/api/register",
+        "http://localhost:8080/user/register",
         values
       );
       console.log(response.status);
       console.log(response.data.result);
-      if (response.status === 201) {
+      if (response.status === 200) {
         //const { accessToken, refreshToken } = response.data;
         const accessToken = response.data.token;
         const refreshToken = response.data.refreshToken;
