@@ -1,6 +1,6 @@
 import React from "react";
 import Dashboard from "./components/Dashboard";
-import withRoot from "D:/Proffession/ReactJs/GreenBill_FrontEnd/src/pages/modules/withRoot.js";
+import withRoot from "../modules/withRoot";
 import ProjectView from "./components/ProjectView";
 
 function Projects() {
