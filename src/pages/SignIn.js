@@ -20,6 +20,11 @@ function SignIn() {
   const [warning, setWarning] = React.useState(false);
   const [accessToken, setAccessToken] = React.useState(null);
   const [refreshToken, setRefreshToken] = React.useState(null);
+  const [firstName, setFirstName] = React.useState(null);
+  const [role, setRole] = React.useState(null);
+  const [warningMessage, setWarningMessage] = React.useState(null);
+  const [accessTokenExpirationTime, setAccessTokenExpirationTime] =
+    React.useState(null);
   let navigate = useNavigate();
   const validate = (values) => {
     const errors = required(["email", "password"], values);
@@ -37,30 +42,35 @@ function SignIn() {
   const handleSubmit = async (values) => {
     try {
       const response = await axios.post(
-        "http://localhost:3200/api/login",
+        "http://localhost:8080/user/login",
         values
       );
+
       console.log(response);
       if (response.status === 200) {
+        console.log(response.status);
+        console.log(response);
         //const { accessToken, refreshToken } = response.data;
-        const accessToken = response.data.token;
-        const refreshToken = response.data.refreshToken;
-        //Calculate AccessToken Expiration Time
-        const currentTime = new Date().getTime();
-        const expirationTime = currentTime + 24 * 60 * 60 * 1000;
+        const accessToken = response.data.data[0].token;
+        const refreshToken = response.data.data[0].refreshToken;
+        const firstName = response.data.data[0].firstName;
+        const expirationTime = response.data.data[0].atexTime;
+        console.log(expirationTime);
+
         setAccessToken(accessToken);
         setRefreshToken(refreshToken);
+        setFirstName(firstName);
+        setAccessTokenExpirationTime(expirationTime);
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
+        localStorage.setItem("firstName", firstName);
         localStorage.setItem("accessTokenExpiration", expirationTime);
 
         setSent(true);
         navigate("/projects");
-      } else {
-        console.log(response.status);
       }
     } catch (error) {
-      //console.error(error);
+      setWarningMessage(error.response.data.message);
       setWarning(true);
     }
   };
@@ -136,7 +146,7 @@ function SignIn() {
               </FormButton>
               {warning && (
                 <Stack spacing={2}>
-                  <Alert severity="error">Invalid Email or Password</Alert>
+                  <Alert severity="error">{warningMessage}</Alert>
                 </Stack>
               )}
             </Box>

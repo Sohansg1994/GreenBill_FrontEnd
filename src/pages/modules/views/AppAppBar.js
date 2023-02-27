@@ -35,27 +35,24 @@ function AppAppBar() {
         const expirationTime = response.data.data[0].atexTime;
         console.log(expirationTime);
         setIsTokenValid(true);
+
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("accessTokenExpiration", expirationTime);
       } catch (error) {
+        console.log("non");
         setIsTokenValid(false);
       }
     };
 
     if (accessToken && expirationTime) {
       console.log("NowCheck1");
+      console.log(expirationTime);
       const currentTime = new Date().getTime(); //expiration time have to calculate or should be received from backend
-      const time = new Date();
-      time.setTime(expirationTime);
-      const expirationTimeConvert = time.getTime();
 
-      console.log(expirationTimeConvert - currentTime); //issue
+      console.log(currentTime - (expirationTime - 300000));
 
-      if (currentTime < expirationTimeConvert) {
+      if (currentTime < expirationTime - 300000) {
         console.log("NowCheck2");
-        console.log(currentTime);
-        console.log(expirationTimeConvert);
-        console.log(expirationTimeConvert - currentTime);
         setIsTokenValid(true);
       } else {
         refreshAccessToken();
@@ -71,10 +68,26 @@ function AppAppBar() {
     };
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("expirationTime"); //handle logout function
-    setIsTokenValid(false);
+  const handleLogout = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/user/logout",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("expirationTime");
+        setIsTokenValid(false);
+      }
+    } catch (error) {
+      console.log("Server Error");
+    }
   };
 
   return (
