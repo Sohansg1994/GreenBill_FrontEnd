@@ -1,7 +1,7 @@
 import { Container } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import Dashboard from "./components/Dashboard";
-import withRoot from "D:/Proffession/ReactJs/GreenBill_FrontEnd/src/pages/modules/withRoot.js";
+import withRoot from "../modules/withRoot";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
