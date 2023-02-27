@@ -58,9 +58,8 @@ function SignUp() {
         const accessToken = response.data.data[0].token;
         const refreshToken = response.data.data[0].refreshToken;
         const firstName = response.data.data[0].firstName;
-        const expirationTime = response.data.data[0].rtexTime;
-
-        //Calculate AccessToken Expiration Time
+        const expirationTime = response.data.data[0].atexTime;
+        console.log(expirationTime);
 
         setAccessToken(accessToken);
         setRefreshToken(refreshToken);

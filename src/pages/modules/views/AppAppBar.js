@@ -35,29 +35,27 @@ function AppAppBar() {
         const expirationTime = response.data.data[0].atexTime;
         console.log(expirationTime);
         setIsTokenValid(true);
+
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("accessTokenExpiration", expirationTime);
       } catch (error) {
+        console.log("non");
         setIsTokenValid(false);
       }
     };
 
-    function subtractMinutes(date, minutes) {
-      date.setMinutes(date.getMinutes() - minutes);
-    
-      return date;
-    }
-
     if (accessToken && expirationTime) {
       console.log("NowCheck1");
+      console.log(expirationTime);
       const currentTime = new Date().getTime(); //expiration time have to calculate or should be received from backend
-      const tokenExpTime = new Date().setTime(expirationTime);
-      const expCheckingTime = subtractMinutes(tokenExpTime,5);
 
-      if (currentTime < expCheckingTime) {
+      console.log(currentTime - (expirationTime - 300000));
+
+      if (currentTime < expirationTime - 300000) {
+        console.log("NowCheck2");
         setIsTokenValid(true);
       } else {
-        refreshAccessToken(false);
+        refreshAccessToken();
       }
     }
   }, [accessToken, expirationTime, refreshToken]);
@@ -70,9 +68,28 @@ function AppAppBar() {
     };
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    /*try {
+      const response = await axios.post(
+        "http://localhost:8080/user/logout",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("expirationTime");
+        setIsTokenValid(false);
+      }
+    } catch (error) {}*/
+
     localStorage.removeItem("accessToken");
-    localStorage.removeItem("expirationTime"); //handle logout function
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("expirationTime");
     setIsTokenValid(false);
   };
 
