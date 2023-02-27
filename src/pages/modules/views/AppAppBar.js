@@ -5,6 +5,7 @@ import AppBar from "../components/AppBar";
 import Toolbar from "../components/Toolbar";
 import { MdPerson } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const rightLink = {
   fontSize: 16,
@@ -15,21 +16,52 @@ const rightLink = {
 function AppAppBar() {
   const [isTokenValid, setIsTokenValid] = React.useState(false);
   const accessToken = localStorage.getItem("accessToken");
+  const firstName = localStorage.getItem("firstName");
   const expirationTime = localStorage.getItem("accessTokenExpiration");
   const [screenWidth, setScreenWidth] = React.useState(window.innerWidth);
   let navigate = useNavigate();
+  const refreshToken = localStorage.getItem("refreshToken");
 
   useEffect(() => {
-    if (accessToken && expirationTime) {
-      const currentTime = new Date().getTime(); //expiration time have to calculate or should recieved from backend
-      console.log(currentTime);
-      if (currentTime < expirationTime) {
-        setIsTokenValid(true);
+    const refreshAccessToken = async () => {
+      console.log("checking");
+      try {
+        const response = await axios.get("http://localhost:8080/auth/token", {
+          headers: {
+            Authorization: `Bearer ${refreshToken}`,
+          },
+        });
+        const accessToken = response.data.data[0].accessToken;
+        const expirationTime = response.data.data[0].atexTime;
         console.log(expirationTime);
+        setIsTokenValid(true);
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("accessTokenExpiration", expirationTime);
+      } catch (error) {
+        setIsTokenValid(false);
+      }
+    };
+
+    if (accessToken && expirationTime) {
+      console.log("NowCheck1");
+      const currentTime = new Date().getTime(); //expiration time have to calculate or should be received from backend
+      const time = new Date();
+      time.setTime(expirationTime);
+      const expirationTimeConvert = time.getTime();
+
+      console.log(expirationTimeConvert - currentTime); //issue
+
+      if (currentTime < expirationTimeConvert) {
+        console.log("NowCheck2");
+        console.log(currentTime);
+        console.log(expirationTimeConvert);
+        console.log(expirationTimeConvert - currentTime);
+        setIsTokenValid(true);
       } else {
+        refreshAccessToken();
       }
     }
-  }, [accessToken, expirationTime]);
+  }, [accessToken, expirationTime, refreshToken]);
 
   useEffect(() => {
     const handleResize = () => setScreenWidth(window.innerWidth);
@@ -142,7 +174,9 @@ function AppAppBar() {
                 >
                   <MdPerson size="1.5rem" />
                   {screenWidth > 550 && (
-                    <span sx={{ marginTop: "0.5rem" }}>{"Hi Sohan"}</span>
+                    <span sx={{ marginTop: "0.5rem" }}>
+                      {"Hi " + firstName}
+                    </span>
                   )}
                 </Box>
               </Link>

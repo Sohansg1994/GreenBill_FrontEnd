@@ -22,6 +22,10 @@ function SignUp() {
   const [warning, setWarning] = React.useState(false);
   const [accessToken, setAccessToken] = React.useState(null);
   const [refreshToken, setRefreshToken] = React.useState(null);
+  const [firstName, setFirstName] = React.useState(null);
+  const [warningMessage, setWarningMessage] = React.useState(null);
+  const [accessTokenExpirationTime, setAccessTokenExpirationTime] =
+    React.useState(null);
   let navigate = useNavigate();
 
   const validate = (values) => {
@@ -46,28 +50,33 @@ function SignUp() {
         "http://localhost:8080/user/register",
         values
       );
-      console.log(response.status);
-      console.log(response.data.result);
+
       if (response.status === 200) {
+        console.log(response.status);
+        console.log(response);
         //const { accessToken, refreshToken } = response.data;
-        const accessToken = response.data.token;
-        const refreshToken = response.data.refreshToken;
+        const accessToken = response.data.data[0].token;
+        const refreshToken = response.data.data[0].refreshToken;
+        const firstName = response.data.data[0].firstName;
+        const expirationTime = response.data.data[0].rtexTime;
+
         //Calculate AccessToken Expiration Time
-        const currentTime = new Date().getTime();
-        const expirationTime = currentTime + 24 * 60 * 60 * 1000;
+
         setAccessToken(accessToken);
         setRefreshToken(refreshToken);
+        setFirstName(firstName);
+        setAccessTokenExpirationTime(expirationTime);
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
+        localStorage.setItem("firstName", firstName);
         localStorage.setItem("accessTokenExpiration", expirationTime);
 
         setSent(true);
         navigate("/subcription");
       }
     } catch (error) {
+      setWarningMessage(error.response.data.message);
       setWarning(true);
-      //console.error(error);
-      // handle error
     }
   };
 
@@ -163,7 +172,7 @@ function SignUp() {
               </FormButton>
               {warning && (
                 <Stack spacing={2}>
-                  <Alert severity="warning">Email Already Registerd</Alert>
+                  <Alert severity="warning">{warningMessage}</Alert>
                 </Stack>
               )}
             </Box>
