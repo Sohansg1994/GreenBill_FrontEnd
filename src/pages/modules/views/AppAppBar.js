@@ -42,23 +42,22 @@ function AppAppBar() {
       }
     };
 
+    function subtractMinutes(date, minutes) {
+      date.setMinutes(date.getMinutes() - minutes);
+    
+      return date;
+    }
+
     if (accessToken && expirationTime) {
       console.log("NowCheck1");
       const currentTime = new Date().getTime(); //expiration time have to calculate or should be received from backend
-      const time = new Date();
-      time.setTime(expirationTime);
-      const expirationTimeConvert = time.getTime();
+      const tokenExpTime = new Date().setTime(expirationTime);
+      const expCheckingTime = subtractMinutes(tokenExpTime,5);
 
-      console.log(expirationTimeConvert - currentTime); //issue
-
-      if (currentTime < expirationTimeConvert) {
-        console.log("NowCheck2");
-        console.log(currentTime);
-        console.log(expirationTimeConvert);
-        console.log(expirationTimeConvert - currentTime);
+      if (currentTime < expCheckingTime) {
         setIsTokenValid(true);
       } else {
-        refreshAccessToken();
+        refreshAccessToken(false);
       }
     }
   }, [accessToken, expirationTime, refreshToken]);
