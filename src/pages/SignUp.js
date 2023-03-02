@@ -45,6 +45,7 @@ function SignUp() {
   };
 
   const handleSubmit = async (values) => {
+    console.log(values);
     try {
       const response = await axios.post(
         "http://localhost:8080/user/register",
@@ -54,12 +55,13 @@ function SignUp() {
       if (response.status === 200) {
         console.log(response.status);
         console.log(response);
+        console.log(response.data.data[0].accessToken);
         //const { accessToken, refreshToken } = response.data;
-        const accessToken = response.data.data[0].token;
+        const accessToken = response.data.data[0].accessToken;
         const refreshToken = response.data.data[0].refreshToken;
         const firstName = response.data.data[0].firstName;
         const expirationTime = response.data.data[0].atexTime;
-        console.log(expirationTime);
+        console.log(accessToken);
 
         setAccessToken(accessToken);
         setRefreshToken(refreshToken);

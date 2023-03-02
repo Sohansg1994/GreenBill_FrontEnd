@@ -44,6 +44,7 @@ function ProjectDetails() {
     category: "Main",
     children: [],
   });
+
   const [selectedNode, setSelectedNode] = useState("root");
 
   const [counter, setCounter] = useState(0);
@@ -51,6 +52,10 @@ function ProjectDetails() {
   //Appliance or not
 
   const [isAppliance, setIsAppliance] = useState(false);
+
+  const [nodeSectionData, setNodeSectionData] = useState("");
+
+  const [isNodeUpdated, setIsNodeUpdated] = useState(false);
 
   const isOptionEqualToValue = (option, value) => option.id === value.id;
 
@@ -74,13 +79,16 @@ function ProjectDetails() {
   //for select node
   const handleNodeSelect = (event, nodeId, nodetype) => {
     event.preventDefault();
-    setSelectedNode(nodeId);
+
     //to disable the add button if node type is appliance
     if (nodetype === "Section" || nodetype === "Main") {
       setIsAppliance(false);
     } else {
       setIsAppliance(true);
     }
+
+    setSelectedNode(nodeId);
+    console.log(selectedNode);
   };
 
   //For render Treeview
@@ -125,22 +133,37 @@ function ProjectDetails() {
 
       let label = inputName;
       let type;
+      let parentNodeId;
+      let applianceCategory;
+
       if (selectedType.id === 1) {
         label = `${inputName} (${selectedType.label})`;
         type = `${selectedType.label}`;
+
         node.children.push({
           id: generateNodeId(),
           name: label,
+
           category: type,
           children: [],
+        });
+
+        setNodeSectionData({
+          parentNodeId: selectedNode,
+          projectId: "null",
+          nodeId: node.children[node.children.length - 1].id,
+          name: inputName,
         });
       } else if (selectedType.id === 2) {
         label = `${inputName} (${selectedApplianceType.label})`;
         type = `${selectedType.label}`;
+        applianceCategory = `${selectedApplianceType.label}`;
         node.children.push({
           id: generateNodeId(),
           name: label,
           category: type,
+
+          wattCapacity: `${wattCapacity}`,
           quantity: `${quantity}`,
           children: [
             { id: "wattCapacity", name: `Watt Capacity: ${wattCapacity}` },
@@ -148,7 +171,19 @@ function ProjectDetails() {
             { id: "quantity", name: `Quantity: ${quantity}` },
           ],
         });
+
+        setNodeSectionData({
+          parentNodeId: selectedNode,
+          applianceType: applianceCategory,
+          projectId: "null",
+          nodeId: node.children[node.children.length - 1].id,
+          name: inputName,
+          category: node.children[node.children.length - 1].category,
+          wattCapacity: node.children[node.children.length - 1].wattCapacity,
+          quantity: node.children[node.children.length - 1].quantity,
+        });
       }
+      setIsNodeUpdated(true);
       return newData;
     });
     setInputName("");
@@ -227,7 +262,13 @@ function ProjectDetails() {
     }
   };
 
-  //console.log(convertToJSON(data));
+  useEffect(() => {
+    if (isNodeUpdated) {
+      console.log(nodeSectionData);
+      console.log(convertToJSON(data));
+      setIsNodeUpdated(false);
+    }
+  });
 
   return (
     <React.Fragment>

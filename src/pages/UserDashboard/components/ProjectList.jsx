@@ -71,7 +71,7 @@ export default function CustomizedTables() {
                     variant="contained"
                     color="info"
                     sx={{ mr: 2 }}
-                    href={`/projectdetails?projectName=${row.name}`}
+                    href={`/projectdetails?projectName =${row.name}`}
                   >
                     View
                   </Button>
