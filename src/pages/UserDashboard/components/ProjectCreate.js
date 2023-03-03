@@ -4,9 +4,12 @@ import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
 import { Autocomplete } from "@mui/material";
 import Button from "@mui/material/Button";
+import { ProjectListUpdate } from "./ProjectList";
+
 import axios from "axios";
 
-function ProjectCreate() {
+function ProjectCreate(props) {
+  const { getProjectList } = props;
   const Type = [
     { label: "Domestic", id: 1 },
     { label: "Industry", id: 2 },
@@ -14,22 +17,13 @@ function ProjectCreate() {
 
   const [projectName, setProjectName] = useState("");
   const [projectType, setProjectType] = useState("");
-  const accessToken = localStorage.getItem("accessToken");
-  /* const [data, setData] = useState("");
-
-  useEffect(() => {
-    setData({ projectName, projectType });
-  }, [projectName, projectType]);
-
-  useEffect(() => {
-    console.log(data);
-  });*/
 
   const handleSubmit = async () => {
+    const accessToken = localStorage.getItem("accessToken");
     console.log(accessToken);
     const data = {
-      name: projectName,
-      type: projectType,
+      projectName: projectName,
+      projectType: projectType,
     };
 
     const config = {
@@ -38,16 +32,19 @@ function ProjectCreate() {
       },
     };
 
-    await axios
-      .post("http://localhost:8080/test/project/create", data, config)
-      .then((response) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/test/project/create",
+        data,
+        config
+      );
+      if (response.status === 200) {
+        getProjectList();
         console.log(response);
-        // handle successful response
-      })
-      .catch((error) => {
-        console.log(error);
-        // handle error
-      });
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   return (

@@ -20,12 +20,10 @@ import axios from "axios";
 function SignUp() {
   const [sent, setSent] = React.useState(false);
   const [warning, setWarning] = React.useState(false);
-  const [accessToken, setAccessToken] = React.useState(null);
-  const [refreshToken, setRefreshToken] = React.useState(null);
   const [firstName, setFirstName] = React.useState(null);
   const [warningMessage, setWarningMessage] = React.useState(null);
-  const [accessTokenExpirationTime, setAccessTokenExpirationTime] =
-    React.useState(null);
+
+  React.useState(null);
   let navigate = useNavigate();
 
   const validate = (values) => {
@@ -45,7 +43,6 @@ function SignUp() {
   };
 
   const handleSubmit = async (values) => {
-    console.log(values);
     try {
       const response = await axios.post(
         "http://localhost:8080/user/register",
@@ -53,20 +50,14 @@ function SignUp() {
       );
 
       if (response.status === 200) {
-        console.log(response.status);
-        console.log(response);
-        console.log(response.data.data[0].accessToken);
         //const { accessToken, refreshToken } = response.data;
         const accessToken = response.data.data[0].accessToken;
         const refreshToken = response.data.data[0].refreshToken;
         const firstName = response.data.data[0].firstName;
         const expirationTime = response.data.data[0].atexTime;
-        console.log(accessToken);
 
-        setAccessToken(accessToken);
-        setRefreshToken(refreshToken);
         setFirstName(firstName);
-        setAccessTokenExpirationTime(expirationTime);
+
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
         localStorage.setItem("firstName", firstName);

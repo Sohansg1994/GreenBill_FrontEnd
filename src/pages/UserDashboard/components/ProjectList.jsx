@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -9,6 +9,8 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import ProjectCreate from "./ProjectCreate";
+import axios from "axios";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -31,64 +33,100 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(name, type, last_update_date) {
-  return { name, type, last_update_date };
-}
+export default function ProjectList() {
+  const accessToken = localStorage.getItem("accessToken");
+  const [projects, setProjects] = useState([]);
 
-const rows = [createData("Lake House", "Domestic", "2023/01/23")];
+  useEffect(() => {
+    getProjectList();
+  }, []);
 
-export default function CustomizedTables() {
+  const getProjectList = async () => {
+    console.log("Here");
+    const accessToken = localStorage.getItem("accessToken");
+    const response = await axios.get(
+      "http://localhost:8080/test/project/getAll",
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    setProjects(response.data.data[0]);
+  };
+
+  const handleDelete = async (projectId) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:8080/test/project?projectId=${projectId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      getProjectList();
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 700 }} aria-label="customized table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell>Project Name</StyledTableCell>
-            <StyledTableCell align="center">Type</StyledTableCell>
-            <StyledTableCell align="center">Last Update Date</StyledTableCell>
-            <StyledTableCell align="center">Actions</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow key={row.name}>
-              <StyledTableCell component="th" scope="row">
-                {row.name}
-              </StyledTableCell>
-              <StyledTableCell align="center">{row.type}</StyledTableCell>
-              <StyledTableCell align="center">
-                {row.last_update_date}
-              </StyledTableCell>
-              <StyledTableCell align="center">
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Button
-                    variant="contained"
-                    color="info"
-                    sx={{ mr: 2 }}
-                    href={`/projectdetails?projectName =${row.name}`}
+    <React.Fragment>
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 700 }} aria-label="customized table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell>Project Name</StyledTableCell>
+              <StyledTableCell align="center">Type</StyledTableCell>
+              <StyledTableCell align="center">Last Update Date</StyledTableCell>
+              <StyledTableCell align="center">Actions</StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {projects.map((project) => (
+              <StyledTableRow key={project.projectId}>
+                <StyledTableCell component="th" scope="row">
+                  {project.projectName}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {project.projectType}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {project.lastUpdated}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
                   >
-                    View
-                  </Button>
+                    <Button
+                      variant="contained"
+                      color="info"
+                      sx={{ mr: 2 }}
+                      href={`/projectdetails?projectName=${project.projectName}&projectId=${project.projectId}`}
+                    >
+                      View
+                    </Button>
 
-                  <Button
-                    variant="contained"
-                    color="error"
-                    href="/projectdetails"
-                  >
-                    Delete
-                  </Button>
-                </Box>
-              </StyledTableCell>
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+                    <Button
+                      variant="contained"
+                      color="error"
+                      onClick={() => handleDelete(project.projectId)}
+                    >
+                      Delete
+                    </Button>
+                  </Box>
+                </StyledTableCell>
+              </StyledTableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <ProjectCreate getProjectList={getProjectList} />
+    </React.Fragment>
   );
 }

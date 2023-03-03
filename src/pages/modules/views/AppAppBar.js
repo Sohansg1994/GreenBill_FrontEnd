@@ -15,12 +15,27 @@ const rightLink = {
 
 function AppAppBar() {
   const [isTokenValid, setIsTokenValid] = React.useState(false);
-  const accessToken = localStorage.getItem("accessToken");
-  const firstName = localStorage.getItem("firstName");
-  const expirationTime = localStorage.getItem("accessTokenExpiration");
+  const aToken = localStorage.getItem("accessToken");
+  const rToken = localStorage.getItem("refreshToken");
+  const eTime = localStorage.getItem("accessTokenExpiration");
+  const fname = localStorage.getItem("firstName");
+
+  const [accessToken, setAccessToken] = React.useState(aToken);
+  const [refreshToken, setRefreshToken] = React.useState(rToken);
+  const [expirationTime, setExpirationTime] = React.useState(eTime);
+  const [firstName, setFirstName] = React.useState(fname);
+
   const [screenWidth, setScreenWidth] = React.useState(window.innerWidth);
+
   let navigate = useNavigate();
-  const refreshToken = localStorage.getItem("refreshToken");
+
+  /*useEffect(() => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("expirationTime");
+    console.log("outside Access " + accessToken);
+    console.log("outside Refresh " + refreshToken);
+  });*/
 
   useEffect(() => {
     const refreshAccessToken = async () => {
@@ -30,22 +45,26 @@ function AppAppBar() {
             Authorization: `Bearer ${refreshToken}`,
           },
         });
-        const accessToken = response.data.data[0].accessToken;
-        const expirationTime = response.data.data[0].atexTime;
+        if (response.data.status === 200) {
+          const newAccessToken = response.data.data[0].accessToken;
+          const newExpirationTime = response.data.data[0].atexTime;
 
-        setIsTokenValid(true);
+          setIsTokenValid(true);
 
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("accessTokenExpiration", expirationTime);
+          localStorage.setItem("accessToken", newAccessToken);
+          localStorage.setItem("accessTokenExpiration", newExpirationTime);
+          setAccessToken(newAccessToken);
+          setExpirationTime(newExpirationTime);
+        }
       } catch (error) {
         setIsTokenValid(false);
       }
     };
 
-    if (accessToken && expirationTime) {
+    if (accessToken != null && expirationTime != null) {
       const currentTime = new Date().getTime(); //expiration time have to calculate or should be received from backend
-
-      if (currentTime < expirationTime - 3600000) {
+      //console.log(currentTime - expirationTime);
+      if (currentTime < expirationTime) {
         setIsTokenValid(true);
       } else {
         refreshAccessToken();
@@ -62,24 +81,33 @@ function AppAppBar() {
   }, []);
 
   const handleLogout = async () => {
+    setIsTokenValid(false);
+    const accessToken1 = localStorage.getItem("accessToken");
     try {
       const response = await axios.post(
         "http://localhost:8080/user/logout",
         {},
         {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${accessToken1}`,
           },
         }
       );
+
       if (response.status === 200) {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("expirationTime");
-        setIsTokenValid(false);
+        localStorage.removeItem("firstName");
+        setAccessToken(null);
+        setRefreshToken(null);
+        setExpirationTime(null);
+        setFirstName(null);
+        navigate("/signIn");
       }
-    } catch (error) {}
-    console.log("Error");
+    } catch (error) {
+      console.log("Error");
+    }
   };
 
   return (
@@ -195,7 +223,7 @@ function AppAppBar() {
                   marginTop: "0.8rem",
                 }}
                 onClick={handleLogout}
-                href="/signin"
+                // href="/signin"
               >
                 {"Log Out"}
               </Link>

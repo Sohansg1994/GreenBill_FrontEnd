@@ -23,6 +23,7 @@ function ProjectDetails() {
   //get project name from Project page
   const location = useLocation();
   const projectName = new URLSearchParams(location.search).get("projectName");
+  const projectId = new URLSearchParams(location.search).get("projectId");
 
   const [inputName, setInputName] = useState("");
 
@@ -41,6 +42,7 @@ function ProjectDetails() {
   const [data, setData] = useState({
     id: "root",
     name: projectName,
+    projectId: projectId,
     category: "Main",
     children: [],
   });

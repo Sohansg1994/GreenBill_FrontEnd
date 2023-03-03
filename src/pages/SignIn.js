@@ -18,13 +18,11 @@ import { useNavigate } from "react-router-dom";
 function SignIn() {
   const [sent, setSent] = React.useState(false);
   const [warning, setWarning] = React.useState(false);
-  const [accessToken, setAccessToken] = React.useState(null);
-  const [refreshToken, setRefreshToken] = React.useState(null);
+
   const [firstName, setFirstName] = React.useState(null);
   const [role, setRole] = React.useState(null);
   const [warningMessage, setWarningMessage] = React.useState(null);
-  const [accessTokenExpirationTime, setAccessTokenExpirationTime] =
-    React.useState(null);
+
   let navigate = useNavigate();
   const validate = (values) => {
     const errors = required(["email", "password"], values);
@@ -57,10 +55,8 @@ function SignIn() {
         const expirationTime = response.data.data[0].atexTime;
         console.log(expirationTime);
 
-        setAccessToken(accessToken);
-        setRefreshToken(refreshToken);
         setFirstName(firstName);
-        setAccessTokenExpirationTime(expirationTime);
+
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
         localStorage.setItem("firstName", firstName);
