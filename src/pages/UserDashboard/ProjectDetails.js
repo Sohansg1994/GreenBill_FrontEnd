@@ -18,7 +18,7 @@ import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 import AlertTitle from "@mui/material/AlertTitle";
 import { makeStyles } from "@mui/material";
-
+import axios from "axios";
 function ProjectDetails() {
   //get project name from Project page
   const location = useLocation();
@@ -71,6 +71,27 @@ function ProjectDetails() {
     { label: "Light", id: 2 },
     { label: "Kitchen Appliance", id: 3 },
   ];
+
+  //to save data in dataBase
+  const saveTreeData = async () => {
+    try {
+      const response = await axios.post("/api/treeview", data);
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getTreeData = async () => {
+    try {
+      const response = await axios.get("/api/get-tree-data");
+      const data = await response.json();
+      console.log(data);
+      setData(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   //to generate custom node id
   const generateNodeId = () => {
@@ -164,7 +185,7 @@ function ProjectDetails() {
           id: generateNodeId(),
           name: label,
           category: type,
-
+          hours: `${hours}`,
           wattCapacity: `${wattCapacity}`,
           quantity: `${quantity}`,
           children: [
@@ -427,7 +448,7 @@ function ProjectDetails() {
                     variant="contained"
                     color="primary"
                     onClick={handleAdd}
-                    disabled={isAppliance == true}
+                    disabled={isAppliance === true}
                     sx={{ width: "25%" }}
                   >
                     Add

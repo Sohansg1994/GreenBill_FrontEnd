@@ -126,7 +126,9 @@ export default function ProjectList() {
           </TableBody>
         </Table>
       </TableContainer>
-      <ProjectCreate getProjectList={getProjectList} />
+      <div sx={{ mt: 4, mb: 4 }}>
+        <ProjectCreate getProjectList={getProjectList} />
+      </div>
     </React.Fragment>
   );
 }
