@@ -96,7 +96,7 @@ function ProjectDetails() {
   //to generate custom node id
   const generateNodeId = () => {
     setCounter((prevCounter) => prevCounter + 1);
-    return `node-${Date.now()}-${counter}`;
+    return `${projectId}-${Date.now()}-${counter}`;
   };
 
   //for select node
