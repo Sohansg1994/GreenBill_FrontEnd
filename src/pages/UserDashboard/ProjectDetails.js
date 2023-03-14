@@ -24,6 +24,7 @@ function ProjectDetails() {
   const location = useLocation();
   const projectName = new URLSearchParams(location.search).get("projectName");
   const projectId = new URLSearchParams(location.search).get("projectId");
+  const userId = localStorage.getItem("firstName");
 
   const [inputName, setInputName] = useState("");
 
@@ -96,7 +97,7 @@ function ProjectDetails() {
   //to generate custom node id
   const generateNodeId = () => {
     setCounter((prevCounter) => prevCounter + 1);
-    return `${projectId}-${Date.now()}-${counter}`;
+    return `${userId}-${projectId}-${Date.now()}-${counter}`;
   };
 
   //for select node
