@@ -1,5 +1,4 @@
 import { Box } from "@mui/system";
-
 import React, { useEffect, useState } from "react";
 import withRoot from "D:/Proffession/ReactJs/GreenBill_FrontEnd/src/pages/modules/withRoot.js";
 import Button from "@mui/material/Button";
@@ -15,21 +14,29 @@ import axios from "axios";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: "#28282a",
+    backgroundColor: "#ffff",
     color: theme.palette.common.white,
     fontSize: 16,
+    border: "none",
+    padding: 3,
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 16,
+    border: "none",
+    padding: 3,
   },
 }));
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
+/*const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {},
-  // hide last border
-  "&:last-child td, &:last-child th": { border: 0 },
-  border: "1px solid #ddd",
-}));
+  "&:first-child td, &:first-child th": {},
+  "&:last-child td, &:last-child th": {},
+  "& > *": {
+    paddingTop: theme.spacing(0.5),
+    paddingBottom: theme.spacing(0.5),
+  },
+  border: "none",
+}));*/
 
 function createData(description, equal, amount) {
   return { description, equal, amount };
@@ -112,25 +119,25 @@ const ResultCalculation = (props) => {
             <Table
               sx={{
                 minWidth: 500,
-                width: "75%",
+                width: "60%",
                 mx: "auto",
                 borderColor: "#fff",
+                border: "none", // Add this line to remove the border
               }}
               aria-label="simple table"
             >
               <TableHead>
                 <TableRow>
-                  <TableCell></TableCell>
-                  <TableCell align="right"></TableCell>
-                  <TableCell align="right"></TableCell>
+                  <StyledTableCell></StyledTableCell>
+                  <StyledTableCell align="right"></StyledTableCell>
+                  <StyledTableCell align="right"></StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {rows.map((row) => (
-                  <StyledTableRow
+                  <TableRow
                     key={row.name}
                     sx={{
-                      "&:last-child td, &:last-child th": { border: 0 },
                       border: "none",
                     }}
                   >
@@ -145,9 +152,13 @@ const ResultCalculation = (props) => {
                       {row.equal}
                     </StyledTableCell>
                     <StyledTableCell align="right">
-                      {row.amount}
+                      {row.description === "Bill Amount" ? (
+                        <span style={{ fontWeight: "bold" }}>{row.amount}</span>
+                      ) : (
+                        row.amount
+                      )}
                     </StyledTableCell>
-                  </StyledTableRow>
+                  </TableRow>
                 ))}
               </TableBody>
             </Table>
