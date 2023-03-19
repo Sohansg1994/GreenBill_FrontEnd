@@ -36,6 +36,7 @@ function createData(description, equal, amount) {
 }
 
 const ResultCalculation = (props) => {
+  const [isResultUpdated, setIsResultUpdated] = useState(false);
   const { projectId } = props;
   const [rows, setRows] = useState([
     createData("Total Units", "=", ""),
@@ -68,6 +69,7 @@ const ResultCalculation = (props) => {
         ];
 
         setRows(updatedRows);
+        setIsResultUpdated(true);
       }
     } catch (error) {
       console.log(error.message);
@@ -105,48 +107,52 @@ const ResultCalculation = (props) => {
           Calculate
         </Button>
 
-        <TableContainer sx={{ mt: 3 }}>
-          <Table
-            sx={{
-              minWidth: 500,
-              width: "75%",
-              mx: "auto",
-              borderColor: "#fff",
-            }}
-            aria-label="simple table"
-          >
-            <TableHead>
-              <TableRow>
-                <TableCell></TableCell>
-                <TableCell align="right"></TableCell>
-                <TableCell align="right"></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map((row) => (
-                <StyledTableRow
-                  key={row.name}
-                  sx={{
-                    "&:last-child td, &:last-child th": { border: 0 },
-                    border: "none",
-                  }}
-                >
-                  <StyledTableCell
-                    component="th"
-                    scope="row"
-                    sx={{ width: "40%" }}
+        {isResultUpdated && (
+          <TableContainer sx={{ mt: 3 }}>
+            <Table
+              sx={{
+                minWidth: 500,
+                width: "75%",
+                mx: "auto",
+                borderColor: "#fff",
+              }}
+              aria-label="simple table"
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell></TableCell>
+                  <TableCell align="right"></TableCell>
+                  <TableCell align="right"></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows.map((row) => (
+                  <StyledTableRow
+                    key={row.name}
+                    sx={{
+                      "&:last-child td, &:last-child th": { border: 0 },
+                      border: "none",
+                    }}
                   >
-                    {row.description}
-                  </StyledTableCell>
-                  <StyledTableCell align="right" sx={{ width: "10%" }}>
-                    {row.equal}
-                  </StyledTableCell>
-                  <StyledTableCell align="right">{row.amount}</StyledTableCell>
-                </StyledTableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                    <StyledTableCell
+                      component="th"
+                      scope="row"
+                      sx={{ width: "40%" }}
+                    >
+                      {row.description}
+                    </StyledTableCell>
+                    <StyledTableCell align="right" sx={{ width: "10%" }}>
+                      {row.equal}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.amount}
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
       </Box>
     </Box>
   );
