@@ -22,9 +22,10 @@ function ProjectCreate(props) {
     const accessToken = localStorage.getItem("accessToken");
     console.log(accessToken);
     const data = {
-      projectName: projectName,
+      name: projectName,
       projectType: projectType,
     };
+    console.log(data);
 
     const config = {
       headers: {
@@ -34,7 +35,7 @@ function ProjectCreate(props) {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/test/project/create",
+        "http://localhost:8080/project",
         data,
         config
       );

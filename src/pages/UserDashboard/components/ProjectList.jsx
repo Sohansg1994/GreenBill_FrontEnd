@@ -44,14 +44,12 @@ export default function ProjectList() {
   const getProjectList = async () => {
     console.log("Here");
     const accessToken = localStorage.getItem("accessToken");
-    const response = await axios.get(
-      "http://localhost:8080/test/project/getAll",
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
+    const response = await axios.get("http://localhost:8080/project/getAll", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    console.log(response);
     setProjects(response.data.data[0]);
   };
 
@@ -107,7 +105,7 @@ export default function ProjectList() {
                       variant="contained"
                       color="info"
                       sx={{ mr: 2 }}
-                      href={`/projectdetails?projectName=${project.projectName}&projectId=${project.projectId}`}
+                      href={`/projectdetails?projectName=${project.name}&projectId=${project.projectId}`}
                     >
                       View
                     </Button>

@@ -19,12 +19,13 @@ import Stack from "@mui/material/Stack";
 import AlertTitle from "@mui/material/AlertTitle";
 import { makeStyles } from "@mui/material";
 import axios from "axios";
+import ResultCalculation from "./ResultCalculation.js";
 function ProjectDetails() {
   //get project name from Project page
   const location = useLocation();
   const projectName = new URLSearchParams(location.search).get("projectName");
   const projectId = new URLSearchParams(location.search).get("projectId");
-  const userId = localStorage.getItem("firstName");
+  const userId = localStorage.getItem("userId");
 
   const [inputName, setInputName] = useState("");
 
@@ -41,10 +42,9 @@ function ProjectDetails() {
   const [isNodeNumberExceed, setisNodeNumberExceed] = useState(false);
 
   const [data, setData] = useState({
-    id: "root",
+    frontEndId: "root",
     name: projectName,
-    projectId: projectId,
-    category: "Main",
+    nodeType: "Main",
     children: [],
   });
 
@@ -55,10 +55,6 @@ function ProjectDetails() {
   //Appliance or not
 
   const [isAppliance, setIsAppliance] = useState(false);
-
-  const [nodeSectionData, setNodeSectionData] = useState("");
-
-  const [isNodeUpdated, setIsNodeUpdated] = useState(false);
 
   const isOptionEqualToValue = (option, value) => option.id === value.id;
 
@@ -73,31 +69,10 @@ function ProjectDetails() {
     { label: "Kitchen Appliance", id: 3 },
   ];
 
-  //to save data in dataBase
-  const saveTreeData = async () => {
-    try {
-      const response = await axios.post("/api/treeview", data);
-      console.log(response);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const getTreeData = async () => {
-    try {
-      const response = await axios.get("/api/get-tree-data");
-      const data = await response.json();
-      console.log(data);
-      setData(data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   //to generate custom node id
   const generateNodeId = () => {
     setCounter((prevCounter) => prevCounter + 1);
-    return `${userId}-${projectId}-${Date.now()}-${counter}`;
+    return `${userId}_${projectId}_${Date.now()}_${counter}`;
   };
 
   //for select node
@@ -118,15 +93,17 @@ function ProjectDetails() {
   //For render Treeview
   const renderTree = (nodes) => (
     <TreeItem
-      key={nodes.id}
-      nodeId={nodes.id}
-      nodetype={nodes.category}
+      key={nodes.frontEndId}
+      nodeId={nodes.frontEndId}
+      nodetype={nodes.nodeType}
       label={
         nodes.selectedType === 2
           ? `${nodes.name} - Watt Capacity: ${nodes.wattCapacity} - Hours: ${nodes.hours} - Quantity: ${nodes.quantity} `
           : nodes.name
       }
-      onClick={(event) => handleNodeSelect(event, nodes.id, nodes.category)}
+      onClick={(event) =>
+        handleNodeSelect(event, nodes.frontEndId, nodes.nodeType)
+      }
     >
       {Array.isArray(nodes.children)
         ? nodes.children.map((node) => renderTree(node))
@@ -134,18 +111,123 @@ function ProjectDetails() {
     </TreeItem>
   );
 
+  const getData = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+
+    const response = await axios.get(
+      `http://localhost:8080/project/?projectId=${projectId}`,
+      config
+    );
+    console.log(response.data.root);
+  };
+
+  const addNode = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+
+    if (selectedType.id === 1) {
+      let label = `${inputName} (${selectedType.label})`;
+      let type = `${selectedType.label}`;
+      let frontEndId = generateNodeId();
+
+      const nodeSectionData = {
+        frontEndId: frontEndId,
+        nodeType: type,
+        parentFrontEndId: selectedNode,
+        name: label,
+      };
+
+      try {
+        const response = await axios.post(
+          "http://localhost:8080/node/add",
+          nodeSectionData,
+          config
+        );
+        if (response.status === 200) {
+          handleAdd(nodeSectionData);
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    } else if (selectedType.id === 2) {
+      let label = `${inputName} (${selectedApplianceType.label})`;
+      let type = `${selectedType.label}`;
+      let applianceCategory = `${selectedApplianceType.label}`;
+
+      let frontEndId = generateNodeId();
+
+      let applianceHours = hours;
+
+      let wattRate = wattCapacity;
+
+      let applianceQuantity = quantity;
+
+      const nodeApplianceData = {
+        frontEndId: frontEndId,
+        nodeType: type,
+        parentFrontEndId: selectedNode,
+        name: label,
+        wattRate: wattRate,
+        hours: applianceHours,
+        quantity: applianceQuantity,
+        applianceType: applianceCategory,
+      };
+      console.log(nodeApplianceData);
+
+      try {
+        const response = await axios.post(
+          "http://localhost:8080/node/add",
+          nodeApplianceData,
+          config
+        );
+        if (response.status === 200) {
+          handleAdd(nodeApplianceData);
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+  };
+
+  const deleteNode = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+    let nodeId = selectedNode;
+    try {
+      const response = await axios.delete(
+        `http://localhost:8080/node?frontEndId=${nodeId}`,
+        config
+      );
+      if (response.status === 200) {
+        handleDelete(nodeId);
+      }
+    } catch {}
+  };
+
   // Node adding function
-  const handleAdd = (event) => {
-    event.preventDefault();
+  const handleAdd = (nodeData) => {
     setData((prevData) => {
       let newData = { ...prevData };
-      let node = findNode(newData, selectedNode);
+      let node = findNode(newData, nodeData.parentFrontEndId);
 
       if (!node.children) {
         node.children = [];
       }
       //limiting section numbers
-      if (selectedType.id === 1 && node.children.length >= 2) {
+      /* if (selectedType.id === 1 && node.children.length >= 2) {
         setisNodeNumberExceed(true);
         return newData;
       }
@@ -153,61 +235,39 @@ function ProjectDetails() {
       if (selectedType.id === 2 && node.children.length >= 2) {
         setisNodeNumberExceed(true);
         return newData;
-      }
+      }*/
 
       let label = inputName;
       let type;
-      let parentNodeId;
+      let frontEndId;
       let applianceCategory;
 
       if (selectedType.id === 1) {
         label = `${inputName} (${selectedType.label})`;
         type = `${selectedType.label}`;
-
+        frontEndId = nodeData.frontEndId;
         node.children.push({
-          id: generateNodeId(),
+          frontEndId: frontEndId,
           name: label,
-
-          category: type,
+          nodeType: type,
           children: [],
-        });
-
-        setNodeSectionData({
-          parentNodeId: selectedNode,
-          projectId: "null",
-          nodeId: node.children[node.children.length - 1].id,
-          name: inputName,
         });
       } else if (selectedType.id === 2) {
         label = `${inputName} (${selectedApplianceType.label})`;
         type = `${selectedType.label}`;
         applianceCategory = `${selectedApplianceType.label}`;
+        frontEndId = nodeData.frontEndId;
         node.children.push({
-          id: generateNodeId(),
+          frontEndId: frontEndId,
           name: label,
-          category: type,
+          nodeType: type,
           hours: `${hours}`,
           wattCapacity: `${wattCapacity}`,
           quantity: `${quantity}`,
-          children: [
-            { id: "wattCapacity", name: `Watt Capacity: ${wattCapacity}` },
-            { id: "hours", name: `Hours: ${hours}` },
-            { id: "quantity", name: `Quantity: ${quantity}` },
-          ],
-        });
-
-        setNodeSectionData({
-          parentNodeId: selectedNode,
-          applianceType: applianceCategory,
-          projectId: "null",
-          nodeId: node.children[node.children.length - 1].id,
-          name: inputName,
-          category: node.children[node.children.length - 1].category,
-          wattCapacity: node.children[node.children.length - 1].wattCapacity,
-          quantity: node.children[node.children.length - 1].quantity,
+          children: [],
         });
       }
-      setIsNodeUpdated(true);
+
       return newData;
     });
     setInputName("");
@@ -219,7 +279,7 @@ function ProjectDetails() {
   };
   //Node find function
   const findNode = (data, nodeId) => {
-    if (data.id === nodeId) {
+    if (data.frontEndId === nodeId) {
       return data;
     }
     for (let i = 0; i < data.children.length; i++) {
@@ -232,13 +292,13 @@ function ProjectDetails() {
     return null;
   };
   //Node Delete Function
-  const handleDelete = () => {
+  const handleDelete = (nodeId) => {
     setData((prevData) => {
       let newData = { ...prevData };
-      let parentNode = findParentNode(newData, selectedNode);
+      let parentNode = findParentNode(newData, nodeId);
       if (parentNode) {
         let nodeIndex = parentNode.children.findIndex(
-          (node) => node.id === selectedNode
+          (node) => node.frontEndId === nodeId
         );
         if (nodeIndex !== -1) {
           parentNode.children.splice(nodeIndex, 1);
@@ -251,7 +311,7 @@ function ProjectDetails() {
   const findParentNode = (data, nodeId) => {
     if (data.children) {
       for (let i = 0; i < data.children.length; i++) {
-        if (data.children[i].id === nodeId) {
+        if (data.children[i].frontEndId === nodeId) {
           return data;
         }
         let parentNode = findParentNode(data.children[i], nodeId);
@@ -265,11 +325,11 @@ function ProjectDetails() {
 
   const convertToJSON = (nodes) => {
     //convert to Jason for Appliance
-    if (nodes.category === "Appliance") {
+    if (nodes.nodeType === "Appliance") {
       return {
-        id: nodes.id,
+        frontEndId: nodes.frontEndId,
         name: nodes.name,
-        selectedType: nodes.category,
+        selectedType: nodes.nodeType,
         wattCapacity: nodes.wattCapacity,
         hours: nodes.hours,
         quantity: nodes.quantity,
@@ -278,20 +338,17 @@ function ProjectDetails() {
     } else {
       //convert to Jason for Sections
       return {
-        id: nodes.id,
+        frontEndId: nodes.frontEndId,
         name: nodes.name,
-        selectedType: nodes.category,
+        selectedType: nodes.nodeType,
         children: nodes.children?.map((node) => convertToJSON(node)),
       };
     }
   };
 
   useEffect(() => {
-    if (isNodeUpdated) {
-      console.log(nodeSectionData);
-      console.log(convertToJSON(data));
-      setIsNodeUpdated(false);
-    }
+    console.log(data);
+    getData();
   });
 
   return (
@@ -303,7 +360,7 @@ function ProjectDetails() {
             mt: 5,
             display: "flex",
             columnGap: 3,
-            width: "100%",
+            width: "1250px",
             height: "80vh",
           }}
         >
@@ -448,7 +505,7 @@ function ProjectDetails() {
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={handleAdd}
+                    onClick={addNode}
                     disabled={isAppliance === true}
                     sx={{ width: "25%" }}
                   >
@@ -457,7 +514,7 @@ function ProjectDetails() {
                   <Button
                     variant="contained"
                     color="error"
-                    onClick={handleDelete}
+                    onClick={deleteNode}
                     sx={{ width: "25%" }}
                   >
                     Delete
@@ -478,6 +535,9 @@ function ProjectDetails() {
                   </Box>
                 )}
               </Box>
+            </Paper>
+            <Paper>
+              <ResultCalculation projectId={projectId} />
             </Paper>
           </Box>
         </Box>

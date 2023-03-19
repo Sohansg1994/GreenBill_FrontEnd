@@ -48,19 +48,21 @@ function SignUp() {
         "http://localhost:8080/user/register",
         values
       );
-
+      console.log(response);
       if (response.status === 200) {
         //const { accessToken, refreshToken } = response.data;
         const accessToken = response.data.data[0].accessToken;
         const refreshToken = response.data.data[0].refreshToken;
         const firstName = response.data.data[0].firstName;
-        const expirationTime = response.data.data[0].atexTime;
-
+        const userId = response.data.data[0].userId;
+        const expirationTime = response.data.data[0].accessTokenExpireTime;
+        console.log(expirationTime);
         setFirstName(firstName);
 
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
         localStorage.setItem("firstName", firstName);
+        localStorage.setItem("userId", userId);
         localStorage.setItem("accessTokenExpiration", expirationTime);
 
         setSent(true);
