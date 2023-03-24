@@ -11,6 +11,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import axios from "axios";
+import { TextField } from "@mui/material";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -46,6 +47,8 @@ const ResultCalculation = (props) => {
   const [isResultUpdated, setIsResultUpdated] = useState(false);
   const { projectId } = props;
   const [isProject, setIsProject] = useState(false);
+  const [calculationSteps, setCalculationSteps] = useState([]);
+  const [units, setUnits] = useState("");
 
   const [rows, setRows] = useState([
     createData("Total Units", ""),
@@ -73,9 +76,9 @@ const ResultCalculation = (props) => {
       );
       if (response.status === 200) {
         console.log(response);
-
+        setCalculationSteps(response.data.data[0].calculationSteps);
+        setUnits(response.data.data[0].totalUnits);
         const updatedRows = [
-          createData("Total Units", response.data.data[0].totalUnits),
           createData("Usage Charge", response.data.data[0].usageCharge),
           createData("Total Charge", response.data.data[0].totalCharge),
           createData("Tax", response.data.data[0].levy),
@@ -142,6 +145,24 @@ const ResultCalculation = (props) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
+                  <StyledTableCell>Total Units</StyledTableCell>
+                  <StyledTableCell align="right">{units}</StyledTableCell>
+                  {calculationSteps.map((steps) => (
+                    <TableRow
+                      sx={{
+                        border: "none",
+                      }}
+                    >
+                      <StyledTableCell
+                        component="th"
+                        scope="row"
+                        sx={{ width: "40%" }}
+                      ></StyledTableCell>
+                      <StyledTableCell align="right">
+                        <span style={{ fontWeight: "revert" }}>{steps}</span>
+                      </StyledTableCell>
+                    </TableRow>
+                  ))}
                   {rows.map((row) => (
                     <TableRow
                       key={row.name}

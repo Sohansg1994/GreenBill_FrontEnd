@@ -20,6 +20,7 @@ import AlertTitle from "@mui/material/AlertTitle";
 import { makeStyles } from "@mui/material";
 import axios from "axios";
 import ResultCalculation from "./ResultCalculation.js";
+import SectionComponents from "./SectionComponents";
 function ProjectDetails() {
   //get project name from Project page
   const location = useLocation();
@@ -44,8 +45,17 @@ function ProjectDetails() {
   const [data, setData] = useState({
     frontEndId: "root",
     name: projectName,
-    nodeType: "Main",
+    nodeType: "Root",
     children: [],
+  });
+
+  // Appliance data contain
+  const [applianceData, setApplianceData] = useState({
+    name: "",
+    wattRate: "",
+    hours: "",
+    applianceType: "",
+    quantity: "",
   });
 
   const [selectedNode, setSelectedNode] = useState("root");
@@ -55,6 +65,11 @@ function ProjectDetails() {
   //Appliance or not
 
   const [isAppliance, setIsAppliance] = useState(false);
+
+  //Project or not
+  const [isProject, setIsProject] = useState(false);
+
+  const [isSection, setIsSection] = useState(false);
 
   const isOptionEqualToValue = (option, value) => option.id === value.id;
 
@@ -76,20 +91,36 @@ function ProjectDetails() {
   };
 
   //for select node
-  const handleNodeSelect = (event, nodeId, nodetype) => {
+  const handleNodeSelect = (event, nodeId, nodetype, data) => {
     event.preventDefault();
 
     //to disable the add button if node type is appliance
-    if (nodetype === "Section" || nodetype === "Main") {
+    if (nodetype === "Root") {
       setIsAppliance(false);
+      setIsProject(true);
+      setIsSection(false);
+    } else if (nodetype === "Section") {
+      setIsAppliance(false);
+      setIsProject(false);
+      setIsSection(true);
     } else {
       setIsAppliance(true);
+      setIsProject(false);
+      setIsSection(false);
+      console.log(data.name);
+      // Check if selected node is an appliance node
+
+      setApplianceData({
+        name: data.name,
+        wattRate: data.wattRate,
+        hours: data.hours,
+        applianceType: data.applianceType,
+        quantity: data.quantity,
+      });
     }
 
     setSelectedNode(nodeId);
-    console.log(selectedNode);
   };
-
   //For render Treeview
   const renderTree = (nodes) => (
     <TreeItem
@@ -102,7 +133,7 @@ function ProjectDetails() {
           : nodes.name
       }
       onClick={(event) =>
-        handleNodeSelect(event, nodes.frontEndId, nodes.nodeType)
+        handleNodeSelect(event, nodes.frontEndId, nodes.nodeType, nodes)
       }
     >
       {Array.isArray(nodes.children)
@@ -120,10 +151,11 @@ function ProjectDetails() {
     };
 
     const response = await axios.get(
-      `http://localhost:8080/project/?projectId=${projectId}`,
+      `http://localhost:8080/project?projectId=${projectId}`,
       config
     );
-    console.log(response.data.root);
+    const backEndData = response.data.root;
+    setData(backEndData);
   };
 
   const addNode = async () => {
@@ -159,7 +191,7 @@ function ProjectDetails() {
         console.log(error.message);
       }
     } else if (selectedType.id === 2) {
-      let label = `${inputName} (${selectedApplianceType.label})`;
+      let label = `${inputName} `;
       let type = `${selectedType.label}`;
       let applianceCategory = `${selectedApplianceType.label}`;
 
@@ -253,14 +285,16 @@ function ProjectDetails() {
           children: [],
         });
       } else if (selectedType.id === 2) {
-        label = `${inputName} (${selectedApplianceType.label})`;
+        label = `${inputName} `;
         type = `${selectedType.label}`;
         applianceCategory = `${selectedApplianceType.label}`;
         frontEndId = nodeData.frontEndId;
         node.children.push({
           frontEndId: frontEndId,
           name: label,
+
           nodeType: type,
+          applianceType: `${selectedApplianceType.label}`,
           hours: `${hours}`,
           wattCapacity: `${wattCapacity}`,
           quantity: `${quantity}`,
@@ -347,7 +381,6 @@ function ProjectDetails() {
   };
 
   useEffect(() => {
-    console.log(data);
     getData();
   });
 
@@ -361,7 +394,7 @@ function ProjectDetails() {
             display: "flex",
             columnGap: 3,
             width: "1250px",
-            height: "80vh",
+            height: "100%",
           }}
         >
           <Box
@@ -399,13 +432,27 @@ function ProjectDetails() {
               overflowY: "auto",
             }}
           >
+            {isSection && (
+              <Box
+                sx={{
+                  pt: 3,
+                  pb: 3,
+                }}
+              >
+                <SectionComponents
+                  selectedNode={selectedNode}
+                  isSection={isSection}
+                />
+              </Box>
+            )}
             <Paper elevation={3}>
               <Box p={3}>
                 <TextField
                   label="Name"
                   variant="outlined"
                   fullWidth
-                  value={inputName}
+                  //value={inputName}
+                  value={isAppliance ? applianceData.name : inputName}
                   onChange={(e) => setInputName(e.target.value)}
                 />
                 <Autocomplete
@@ -436,7 +483,7 @@ function ProjectDetails() {
                     options={applianceType}
                     getOptionLabel={(option) => option.label}
                     style={{ width: "100%" }}
-                    disabled={selectedType.id !== 2}
+                    disabled={selectedType.id !== 2 && !isAppliance}
                     onChange={(event, newValue) => {
                       setSelectedApplianceType(newValue);
                     }}
@@ -455,8 +502,9 @@ function ProjectDetails() {
                     label="Watt Capacity"
                     id="outlined-start-adornment"
                     fullWidth
-                    value={wattCapacity}
-                    disabled={selectedType.id !== 2}
+                    // value={wattCapacity}
+                    value={isAppliance ? applianceData.wattRate : wattCapacity}
+                    disabled={selectedType.id !== 2 && !isAppliance}
                     onChange={(e) => setWattCapacity(e.target.value)}
                     InputProps={{
                       endAdornment: (
@@ -473,8 +521,9 @@ function ProjectDetails() {
                     label="Hours"
                     id="outlined-start-adornment"
                     fullWidth
-                    value={hours}
-                    disabled={selectedType.id !== 2}
+                    //value={hours}
+                    value={isAppliance ? applianceData.hours : hours}
+                    disabled={selectedType.id !== 2 && !isAppliance}
                     onChange={(e) => setHours(e.target.value)}
                     InputProps={{
                       endAdornment: (
@@ -487,30 +536,55 @@ function ProjectDetails() {
                     label="Quantity"
                     variant="outlined"
                     fullWidth
-                    value={quantity}
-                    disabled={selectedType.id !== 2}
+                    // value={quantity}
+                    value={isAppliance ? applianceData.quantity : quantity}
+                    disabled={selectedType.id !== 2 && !isAppliance}
                     onChange={(e) => setQuantity(e.target.value)}
                   />
                 </Box>
 
                 <Box
-                  sx={{
-                    mt: 3,
-                    display: "flex",
-                    columnGap: 3,
-                    width: "100%",
-                    justifyContent: "space-evenly",
-                  }}
+                  sx={
+                    !isAppliance
+                      ? {
+                          mt: 3,
+                          display: "flex",
+                          columnGap: 3,
+                          width: "100%",
+                          justifyContent: "space-evenly",
+                        }
+                      : {
+                          mt: 3,
+                          display: "flex",
+                          columnGap: 3,
+                          width: "100%",
+                          justifyContent: "space-evenly",
+                        }
+                  }
                 >
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={addNode}
-                    disabled={isAppliance === true}
-                    sx={{ width: "25%" }}
-                  >
-                    Add
-                  </Button>
+                  {!isAppliance && (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={addNode}
+                      disabled={isAppliance === true}
+                      sx={{ width: "25%" }}
+                    >
+                      Add
+                    </Button>
+                  )}
+
+                  {isAppliance && (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={addNode}
+                      sx={{ width: "25%" }}
+                    >
+                      Update
+                    </Button>
+                  )}
+
                   <Button
                     variant="contained"
                     color="error"
@@ -537,7 +611,7 @@ function ProjectDetails() {
               </Box>
             </Paper>
             <Paper>
-              <ResultCalculation projectId={projectId} />
+              <ResultCalculation projectId={projectId} isProject={isProject} />
             </Paper>
           </Box>
         </Box>

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
@@ -28,7 +28,8 @@ import Container from "@mui/material/Container";
 import { DisabledByDefault } from "@mui/icons-material";
 
 function Subcription() {
-  const [sent, setSent] = React.useState(false);
+  const [sent, setSent] = useState(false);
+  const [subcriptionPlan, setSubcriptionPlan] = useState([]);
 
   const validate = (values) => {
     const errors = required(
@@ -62,60 +63,97 @@ function Subcription() {
     }
   };
 
+  const getSubcriptionPlans = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/subscription/plan`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log(response);
+      if (response.status === 200) {
+        setSubcriptionPlan(response.data.data[0]);
+      } else {
+      }
+    } catch (error) {
+      console.error(error);
+      // handle error
+    }
+  };
+
   const tiers = [
     {
       title: "Free",
-      price: "0",
-      description: ["Sentence 1", "Sentence 2", "Sentence 4", "Sentence 5"],
+      price: ``,
+      description: [
+        `Sentence 1 ${1}`,
+        `Number of Projects - `,
+        `Number of Nodes- `,
+        "Sentence 5",
+      ],
       buttonText: "Get started",
       buttonVariant: "outlined",
 
       path: "/projects",
     },
     {
-      title: "Pro",
+      title: "Domestic Lite",
       subheader: "Most popular",
-      price: "15",
-      description: ["Sentence 1", "Sentence 2", "Sentence 4", "Sentence 5"],
+      price: ``,
+      description: [
+        "Sentence 1",
+        `Number of Projects -  `,
+        `Number of Nodes- `,
+        "Sentence 5",
+      ],
       buttonText: "Get started",
       // buttonVariant: 'contained',
       buttonVariant: "disabled",
 
       path: "/projects",
     },
-    {
-      title: "Enterprise",
-      price: "30",
-      description: ["Sentence 1", "Sentence 2", "Sentence 4", "Sentence 5"],
-      buttonText: "Get started",
-      //buttonVariant: 'outlined',
-      buttonVariant: "disabled",
-
-      path: "/subcription",
-    },
   ];
+
+  useEffect(() => {
+    getSubcriptionPlans();
+  });
 
   return (
     <React.Fragment>
       <AppAppBar />
       <AppFormSub>
         <Container maxWidth="md" component="main">
-          <Grid container spacing={3} alignItems="flex-end">
+          <Grid
+            container
+            spacing={3}
+            sx={{
+              display: "flex",
+              columnGap: 3,
+              width: "100%",
+              justifyContent: "space-evenly",
+            }}
+          >
             {tiers.map((tier) => (
               // Enterprise card is full width at sm breakpoint
               <Grid
                 item
                 key={tier.title}
-                xs={12}
-                sm={tier.title === "Enterprise" ? 12 : 6}
-                md={4}
+                //xs={12}
+                //sm={tier.title === "Enterprise" ? 12 : 6}
+                //md={4}
               >
                 <Card>
                   <CardHeader
                     title={tier.title}
                     subheader={tier.subheader}
                     titleTypographyProps={{ align: "center" }}
-                    action={tier.title === "Pro" ? <StarIcon /> : null}
+                    action={
+                      tier.title === "Domestic Lite" ? <StarIcon /> : null
+                    }
                     subheaderTypographyProps={{
                       align: "center",
                     }}
@@ -137,10 +175,10 @@ function Subcription() {
                     >
                       <Typography
                         component="h2"
-                        variant="h3"
+                        variant="h4"
                         color="text.primary"
                       >
-                        ${tier.price}
+                        LKR {tier.price}
                       </Typography>
                       <Typography variant="h6" color="text.secondary">
                         /mo

@@ -42,7 +42,6 @@ export default function ProjectList() {
   }, []);
 
   const getProjectList = async () => {
-    console.log("Here");
     const accessToken = localStorage.getItem("accessToken");
     const response = await axios.get("http://localhost:8080/project/getAll", {
       headers: {
@@ -85,7 +84,7 @@ export default function ProjectList() {
             {projects.map((project) => (
               <StyledTableRow key={project.projectId}>
                 <StyledTableCell component="th" scope="row">
-                  {project.projectName}
+                  {project.name}
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   {project.projectType}
