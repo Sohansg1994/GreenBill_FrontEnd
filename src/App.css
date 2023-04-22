@@ -1,4 +1,8 @@
-.App {
+:root {
+  font-family: Montserrat, serif;
+}
+
+.app {
   text-align: center;
 }
 
@@ -13,6 +17,7 @@
   }
 }
 
+/*TODO: no use*/
 .App-header {
   background-color: #282c34;
   min-height: 100vh;

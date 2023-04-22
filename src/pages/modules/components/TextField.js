@@ -46,7 +46,7 @@ const styles = ({ theme }) => ({
   },
   [`& .${inputStyleMappingClasses.medium}`]: {
     fontSize: 16,
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
     width: `calc(100% - ${theme.spacing(4)})`,
   },
   [`& .${inputStyleMappingClasses.large}`]: {

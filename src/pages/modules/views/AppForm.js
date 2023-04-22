@@ -5,22 +5,26 @@ import Box from '@mui/material/Box';
 import Paper from '../components/Paper';
 
 function AppForm(props) {
-  const { children } = props;
-
+  const {children} = props;
+  
   return (
     <Box
       sx={{
         display: 'flex',
-        backgroundImage: 'url(/static/onepirate/appCurvyLines.png)',
         backgroundRepeat: 'no-repeat',
+        backgroundColor: '#94AF9F',
+        height: 1
       }}
     >
       <Container maxWidth="sm">
-        <Box sx={{ mt: 7, mb: 12 }}>
-          <Paper
-            background="light"
-            sx={{ py: { xs: 4, md: 8 }, px: { xs: 3, md: 6 } }}
-          >
+        <Box sx={{mt: 7, mb: 12}}>
+          <Paper sx={{
+            my: {xs: 14, md: 14},
+            py: {xs: 4, md: 8},
+            px: {xs: 3, md: 6},
+            backgroundColor: '#FBFBFB',
+            borderRadius: 2
+          }}>
             {children}
           </Paper>
         </Box>

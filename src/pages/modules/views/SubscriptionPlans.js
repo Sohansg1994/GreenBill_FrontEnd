@@ -25,11 +25,11 @@ const image = {
   my: 4,
 };
 
-function ProductHowItWorks() {
+function SubscriptionPlans() {
   return (
     <Box
       component="section"
-      sx={{ display: 'flex', bgcolor: 'secondary.light', overflow: 'hidden' }}
+      sx={{display: 'flex', bgcolor: 'secondary.light', overflow: 'hidden'}}
     >
       <Container
         sx={{
@@ -52,8 +52,8 @@ function ProductHowItWorks() {
             opacity: 0.7,
           }}
         />
-        <Typography variant="h4" marked="center" component="h2" sx={{ mb: 14 }}>
-          How it works
+        <Typography variant="h4" marked="center" component="h2" sx={{mb: 14}}>
+          Plans
         </Typography>
         <div>
           <Grid container spacing={5}>
@@ -67,8 +67,8 @@ function ProductHowItWorks() {
                   sx={image}
                 />
                 <Typography variant="h5" align="center">
-                  Sed ut perspiciatis unde omnis iste natus 
-                  error sit voluptatem 
+                  Sed ut perspiciatis unde omnis iste natus
+                  error sit voluptatem
                 </Typography>
               </Box>
             </Grid>
@@ -77,13 +77,13 @@ function ProductHowItWorks() {
                 <Box sx={number}>2.</Box>
                 <Box
                   component="img"
-                 // src="/static/themes/onepirate/productHowItWorks2.svg"
+                  // src="/static/themes/onepirate/productHowItWorks2.svg"
                   //alt="graph"
                   sx={image}
                 />
                 <Typography variant="h5" align="center">
-                Li Europan lingues es membres del sam familie. 
-                Lor separat existentie es un myth. Por 
+                  Li Europan lingues es membres del sam familie.
+                  Lor separat existentie es un myth. Por
                 </Typography>
               </Box>
             </Grid>
@@ -98,7 +98,7 @@ function ProductHowItWorks() {
                 />
                 <Typography variant="h5" align="center">
                   {'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque  '}
-                 
+                
                 </Typography>
               </Box>
             </Grid>
@@ -110,7 +110,7 @@ function ProductHowItWorks() {
           variant="contained"
           component="a"
           href="/premium-themes/onepirate/sign-up/"
-          sx={{ mt: 8 }}
+          sx={{mt: 8}}
         >
           Get started
         </Button>
@@ -119,4 +119,4 @@ function ProductHowItWorks() {
   );
 }
 
-export default ProductHowItWorks;
+export default SubscriptionPlans;

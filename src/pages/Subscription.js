@@ -4,8 +4,8 @@ import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import { Field, Form, FormSpy } from 'react-final-form';
 import Typography from './modules/components/Typography';
-import AppFooter from './modules/views/AppFooter';
-import AppAppBar from './modules/views/AppAppBar';
+import Footer from './modules/views/Footer';
+import Header from './modules/views/Header';
 import AppFormSub from './modules/views/AppFormSub';
 import { email, required } from './modules/form/validation';
 import RFTextField from './modules/form/RFTextField';
@@ -120,7 +120,7 @@ function Subcription() {
     
   return (
     <React.Fragment>
-      <AppAppBar />
+      <Header />
       <AppFormSub>
       <Container maxWidth="md" component="main">
         <Grid container spacing={3} alignItems="flex-end">
@@ -189,7 +189,7 @@ function Subcription() {
         </Grid>
       </Container>
       </AppFormSub>
-      <AppFooter />
+      <Footer />
     </React.Fragment>
   );
 }

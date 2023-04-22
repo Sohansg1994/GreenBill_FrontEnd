@@ -16,9 +16,8 @@ import Paper from '@mui/material/Paper';
 import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import { mainListItems, secondaryListItems } from './listItems';
-import AppAppBar from '../../modules/views/AppAppBar.js';
+import Header from '../../modules/views/Header.js';
 
-import { green, grey, red } from '@mui/material/colors';
 import theme from '../../modules/theme';
 
 
@@ -97,7 +96,7 @@ function DashboardContent() {
         {<CssBaseline />}
        
 
-        {<AppAppBar position="absolute" open={open}>
+        {<Header position="absolute" open={open}>
           <Toolbar
             sx={{
               pr: '24px', // keep right padding when drawer closed
@@ -107,7 +106,7 @@ function DashboardContent() {
        
            
           </Toolbar>
-            </AppAppBar>}
+            </Header>}
         <Drawer variant="permanent" open={open}>
           <Toolbar
             sx={{
