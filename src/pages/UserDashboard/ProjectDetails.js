@@ -227,7 +227,7 @@ function ProjectDetails() {
     }
   };
 
-  //console.log(convertToJSON(data));
+  console.log(convertToJSON(data));
 
   return (
     <React.Fragment>

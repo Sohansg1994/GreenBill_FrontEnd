@@ -69,10 +69,9 @@ function AppAppBar() {
   }, []);
 
   const handleLogout = async () => {
-    /*try {
+    try {
       const response = await axios.post(
         "http://localhost:8080/user/logout",
-        {},
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -85,7 +84,7 @@ function AppAppBar() {
         localStorage.removeItem("expirationTime");
         setIsTokenValid(false);
       }
-    } catch (error) {}*/
+    } catch (error) {}
 
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
