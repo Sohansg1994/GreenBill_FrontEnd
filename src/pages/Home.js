@@ -1,28 +1,21 @@
-import * as React from "react";
-import ProductCategories from "./modules/views/ProductCategories";
-import ProductSmokingHero from "./modules/views/ProductSmokingHero";
-import AppFooter from "./modules/views/AppFooter";
-import ProductHero from "./modules/views/ProductHero";
-import ProductValues from "./modules/views/ProductValues";
-import ProductHowItWorks from "./modules/views/ProductHowItWorks";
-import ProductCTA from "./modules/views/ProductCTA";
-import AppAppBar from "./modules/views/AppAppBar";
-import withRoot from "./modules/withRoot";
-import SimpleCalculation from "./modules/views/SimpleCalculation";
+import * as React from 'react';
+import Introduction from './modules/views/Introduction';
+import SubscriptionPlans from './modules/views/SubscriptionPlans';
+import Header from './modules/views/Header';
+import withRoot from './modules/withRoot';
+import OurServices from "./modules/views/OurServices";
+import SimpleCalculator from "./modules/views/SimpleCalculator";
+import Footer from "./modules/views/Footer";
 
 function Index() {
   return (
     <React.Fragment>
-      <AppAppBar />
-      <ProductHero />
-      {/*<ProductValues />
-      <ProductCategories />
-      <ProductHowItWorks />
-      <ProductCTA />
-      <ProductSmokingHero />*/}
-      <ProductHowItWorks />
-      <SimpleCalculation />
-      <AppFooter />
+      <Header/>
+      <Introduction/>
+      <OurServices/>
+      <SimpleCalculator/>
+      {/*<SubscriptionPlans/>*/}
+      <Footer/>
     </React.Fragment>
   );
 }

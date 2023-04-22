@@ -9,7 +9,7 @@ export default function withRoot(Component) {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <Component {...props} />
+        <Component sx={{height: 1}} {...props} />
       </ThemeProvider>
     );
   }

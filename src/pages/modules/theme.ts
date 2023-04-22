@@ -29,7 +29,7 @@ const mdTheme = createTheme({
     },
   },
   typography: {
-    fontFamily: "'Work Sans', sans-serif",
+    fontFamily: "'Montserrat', 'Work Sans', sans-serif",
     fontSize: 14,
     fontWeightLight: 300, // Work Sans
     fontWeightRegular: 400, // Work Sans
@@ -40,7 +40,7 @@ const mdTheme = createTheme({
 const fontHeader = {
   color: mdTheme.palette.text.primary,
   fontWeight: mdTheme.typography.fontWeightMedium,
-  fontFamily: "'Roboto Condensed', sans-serif",
+  fontFamily: "'Montserrat', 'Roboto Condensed', sans-serif",
   textTransform: 'uppercase',
 };
 

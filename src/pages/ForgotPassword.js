@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Field, Form, FormSpy } from 'react-final-form';
 import Box from '@mui/material/Box';
 import Typography from './modules/components/Typography';
-import AppFooter from './modules/views/AppFooter';
-import AppAppBar from './modules/views/AppAppBar';
+import Footer from './modules/views/Footer';
+import Header from './modules/views/Header';
 import AppForm from './modules/views/AppForm';
 import { email, required } from './modules/form/validation';
 import RFTextField from './modules/form/RFTextField';
@@ -33,7 +33,7 @@ function ForgotPassword() {
 
   return (
     <React.Fragment>
-      <AppAppBar />
+      <Header />
       <AppForm>
         <React.Fragment>
           <Typography variant="h3" gutterBottom marked="center" align="center">
@@ -85,7 +85,7 @@ function ForgotPassword() {
           )}
         </Form>
       </AppForm>
-      <AppFooter />
+      <Footer />
     </React.Fragment>
   );
 }

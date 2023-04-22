@@ -10,21 +10,10 @@ import Projects from "./pages/UserDashboard/Projects";
 import TariffData from "./pages/UserDashboard/TariffData";
 import ProjectDetails from "./pages/UserDashboard/ProjectDetails";
 
-
-
-
-
-
-
-
-
-
-
 function App() {
   return (
-    <div className="App">
+    <div className="app" style={{height: '100%'}}>
        <BrowserRouter>
-        
           <Routes>
             <Route path="/" element={<Home/>}/>
             <Route path="/signIn" element={<SignIn/>}/>
@@ -33,17 +22,8 @@ function App() {
             <Route path="/projects" element={<Projects/>}/>
             <Route path="/tarifficdata" element={<TariffData/>}/>
             <Route path="/projectdetails" element={<ProjectDetails/>}/>
-         
-         
-
-            
           </Routes>
-       
        </BrowserRouter>
-      
-    
-   
-      
     </div>
   );
 }
