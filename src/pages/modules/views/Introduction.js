@@ -5,12 +5,14 @@ import IntroductionLayout from './IntroductionLayout';
 
 
 export default function Introduction() {
+  const imageUrl = '/pexels-laura-penwell-3608056.jpg'
+  
   return (
     <IntroductionLayout
       sxBackground={{
         backgroundColor: '#94AF9F',
         backgroundPosition: 'center',
-        // backgroundImage: "url(''public/pexels-laura-penwell-3608056.jpg'')"
+        backgroundImage: `url(${imageUrl})`
       }}
     >
       <Typography color="inherit" align="center" variant="h5" sx={{fontFamily: 'Montserrat'}}>

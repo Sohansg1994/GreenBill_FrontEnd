@@ -30,6 +30,8 @@ const Background = styled(Box)({
 
 function IntroductionLayout(props) {
   const {sxBackground, children} = props;
+  const imageUrl = '/pexels-laura-penwell-3608056.jpg'
+  // const imageUrl = 'https://images.unsplash.com/photo-1534081333815-ae5019106622?auto=format&fit=crop&w=400'
   
   return (
     <ProductHeroLayoutRoot>
@@ -39,7 +41,9 @@ function IntroductionLayout(props) {
           mb: 14,
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
+          alignItems: 'center'
+          // backgroundImage: "url('./public/pexels-laura-penwell-3608056.jpg')"
+          // backgroundImage: `url(${imageUrl})`
         }}
       >
         {children}
