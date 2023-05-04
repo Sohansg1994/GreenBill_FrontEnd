@@ -1,30 +1,37 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Link from '@mui/material/Link';
-import {Field, Form, FormSpy} from 'react-final-form';
-import Typography from './modules/components/Typography';
-import Header from './modules/views/Header';
-import AppForm from './modules/views/AppForm';
-import {email, required} from './modules/form/validation';
-import RFTextField from './modules/form/RFTextField';
-import FormButton from './modules/form/FormButton';
-import FormFeedback from './modules/form/FormFeedback';
-import withRoot from './modules/withRoot';
-import {useNavigate} from "react-router-dom";
-import {Alert, Stack} from '@mui/material';
+import * as React from "react";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import Link from "@mui/material/Link";
+import { Field, Form, FormSpy } from "react-final-form";
+import Typography from "./modules/components/Typography";
+import Header from "./modules/views/Header";
+import AppForm from "./modules/views/AppForm";
+import { email, required } from "./modules/form/validation";
+import RFTextField from "./modules/form/RFTextField";
+import FormButton from "./modules/form/FormButton";
+import FormFeedback from "./modules/form/FormFeedback";
+import withRoot from "./modules/withRoot";
+import { useNavigate } from "react-router-dom";
+import { Alert, Stack } from "@mui/material";
 
-import axios from 'axios';
+import axios from "axios";
 
 function SignUp() {
   const [sent, setSent] = React.useState(false);
   const [warning, setWarning] = React.useState(false);
   const [accessToken, setAccessToken] = React.useState(null);
   const [refreshToken, setRefreshToken] = React.useState(null);
+  const [firstName, setFirstName] = React.useState(null);
+  const [role, setRole] = React.useState(null);
+  const [accessTokenExpireTime, setAccessTokenExpireTime] =
+    React.useState(null);
   let navigate = useNavigate();
-  
+
   const validate = (values) => {
-    const errors = required(['firstName', 'lastName', 'email', 'password'], values);
+    const errors = required(
+      ["firstName", "lastName", "email", "password"],
+      values
+    );
     if (!errors.email) {
       const emailError = email(values.email);
       if (emailError) {
@@ -33,26 +40,32 @@ function SignUp() {
     }
     return errors;
   };
-  
+
   const handleSubmit = async (values) => {
     try {
-      const response = await axios.post('http://localhost:3200/api/register', values);
+      const response = await axios.post("/user/register", values);
       console.log(response.status);
-      console.log(response.data.result);
-      if (response.status === 201) {
-        
+      console.log(response.data.data[0]);
+      if (response.status === 200) {
         //const { accessToken, refreshToken } = response.data;
-        const accessToken = response.data.token;
-        const refreshToken = response.data.refreshToken;
-        //Calculate AccessToken Expiration Time
-        const currentTime = new Date().getTime();
-        const expirationTime = currentTime + 24 * 60 * 60 * 1000;
+        const accessToken = response.data.data[0].accessToken;
+        const refreshToken = response.data.data[0].refreshToken;
+        const firstName = response.data.data[0].firstName;
+        const role = response.data.data[0].role;
+        const accessTokenET = response.data.data[0].accessTokenExpireTime;
         setAccessToken(accessToken);
         setRefreshToken(refreshToken);
-        localStorage.setItem('accessToken', accessToken);
-        localStorage.setItem('refreshToken', refreshToken);
-        localStorage.setItem("accessTokenExpiration", expirationTime);
-        
+        setAccessTokenExpireTime(accessTokenET);
+        setFirstName(firstName);
+        setRole(role);
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+        localStorage.setItem("accessTokenExpiration", accessTokenET);
+        localStorage.setItem("firstName", firstName);
+        localStorage.setItem("role", role);
+        console.log(accessTokenExpireTime);
+        console.log(accessToken);
+
         setSent(true);
         navigate("/subcription");
       }
@@ -62,13 +75,17 @@ function SignUp() {
       // handle error
     }
   };
-  
+
   return (
     <React.Fragment>
-      <Header/>
+      <Header />
       <AppForm>
         <React.Fragment>
-          <Typography variant="h3" align="center" sx={{fontFamily: 'Montserrat'}}>
+          <Typography
+            variant="h3"
+            align="center"
+            sx={{ fontFamily: "Montserrat" }}
+          >
             Sign Up
           </Typography>
           <Typography variant="body2" align="center">
@@ -79,11 +96,16 @@ function SignUp() {
         </React.Fragment>
         <Form
           onSubmit={handleSubmit}
-          subscription={{submitting: true}}
+          subscription={{ submitting: true }}
           validate={validate}
         >
-          {({handleSubmit: handleSubmit2, submitting}) => (
-            <Box component="form" onSubmit={handleSubmit2} noValidate sx={{mt: 6}}>
+          {({ handleSubmit: handleSubmit2, submitting }) => (
+            <Box
+              component="form"
+              onSubmit={handleSubmit2}
+              noValidate
+              sx={{ mt: 6 }}
+            >
               <Grid container spacing={1}>
                 <Grid item xs={12} sm={6}>
                   <Field
@@ -130,25 +152,30 @@ function SignUp() {
                 type="password"
                 margin="normal"
               />
-              <FormSpy subscription={{submitError: true}}>
-                {({submitError}) =>
+              <FormSpy subscription={{ submitError: true }}>
+                {({ submitError }) =>
                   submitError ? (
-                    <FormFeedback error sx={{mt: 2}}>
+                    <FormFeedback error sx={{ mt: 2 }}>
                       {submitError}
                     </FormFeedback>
                   ) : null
                 }
               </FormSpy>
               <FormButton
-                sx={{mt: 3, mb: 2, fontFamily: 'Montserrat', backgroundColor: '#1F8A70'}}
+                sx={{
+                  mt: 3,
+                  mb: 2,
+                  fontFamily: "Montserrat",
+                  backgroundColor: "#1F8A70",
+                }}
                 disabled={submitting || sent}
                 fullWidth
               >
-                {submitting || sent ? 'In progress…' : 'Sign Up'}
+                {submitting || sent ? "In progress…" : "Sign Up"}
               </FormButton>
               {warning && (
                 <Stack spacing={2}>
-                  <Alert severity='warning'>Email Already Registered</Alert>
+                  <Alert severity="warning">Email Already Registered</Alert>
                 </Stack>
               )}
             </Box>
